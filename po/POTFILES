@@ -1,0 +1,7 @@
+data/org.scroker.LightController.desktop.in
+data/org.scroker.LightController.appdata.xml.in
+data/org.scroker.LightController.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+

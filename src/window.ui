@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <requires lib="libhandy" version="0.0"/>
+  <template class="LightcontrollerWindow" parent="GtkApplicationWindow">
+    <property name="can-focus">False</property>
+    <property name="default-width">600</property>
+    <property name="default-height">300</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkStack" id="main_stack">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="vexpand">True</property>
+            <property name="transition-type">over-left-right</property>
+            <child>
+              <object class="HdyPreferencesPage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="HdyPreferencesGroup" id="lights_preference_group">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="description" translatable="yes">La lista delle luci connesse all'hub philips hue</property>
+                    <property name="title" translatable="yes">Luci</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">lights</property>
+                <property name="title" translatable="yes">Luci</property>
+                <property name="icon-name">dialog-information-symbolic</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyPreferencesPage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+              </object>
+              <packing>
+                <property name="name">groups</property>
+                <property name="title" translatable="yes">Gruppi</property>
+                <property name="icon-name">user-home-symbolic</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="HdyPreferencesPage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="HdyPreferencesGroup">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="title" translatable="yes">Bridge</property>
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="title" translatable="yes">Nome</property>
+                        <property name="use-underline">True</property>
+                        <child>
+                          <object class="GtkLabel" id="bridge_name_label">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">char</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="title" translatable="yes">Ip Address</property>
+                        <property name="use-underline">True</property>
+                        <child>
+                          <object class="GtkLabel" id="bridge_ip_address_label">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">char</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="title" translatable="yes">Indirizzo MAC</property>
+                        <property name="use-underline">True</property>
+                        <child>
+                          <object class="GtkLabel" id="bridge_mac_label">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">char</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="title" translatable="yes">ID del Bridge</property>
+                        <property name="use-underline">True</property>
+                        <child>
+                          <object class="GtkLabel" id="bridge_id_label">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">char</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="title" translatable="yes">Api-Key</property>
+                        <property name="use-underline">True</property>
+                        <child>
+                          <object class="GtkLabel" id="bridge_api_key_label">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap-mode">char</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="HdyPreferencesGroup">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="HdyPreferencesRow">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <child>
+                          <object class="GtkButton" id="connect_button">
+                            <property name="label" translatable="yes">Trova un Bridge</property>
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">bridge</property>
+                <property name="title" translatable="yes">Bridge</property>
+                <property name="icon-name">preferences-desktop-display-symbolic</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="HdyViewSwitcherBar" id="bottom_switcher">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="stack">main_stack</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="HdyHeaderBar" id="header_bar">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="show-close-button">True</property>
+        <child type="title">
+          <object class="HdySqueezer" id="squeezer">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="HdyViewSwitcher" id="headerbar_switcher">
+                <property name="width-request">180</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stack">main_stack</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="name">title_label</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label">Light Controller</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="menu_button">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">False</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
