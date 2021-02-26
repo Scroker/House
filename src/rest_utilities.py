@@ -115,7 +115,7 @@ class RESTUtilities(GObject.Object):
             if 'error' in set_light_response:
                 raise Exception(set_light_response['error'])
             if 'success' in set_light_response:
-                return set_group_response['success']
+                return set_light_response['success']
 
     def put_group_action(self, bridge, authentication_handler, index, active:str=None, brightness:int=None, alert:str=None):
         request = {}

@@ -67,21 +67,25 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
     def on_groups_scale_moved(self, widget, bridge, auth_handler, index):
         self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
-    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale):
+    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale=None):
         if widget.get_active():
             self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
-            brightness_scale.set_sensitive(True)
+            if brightness_scale != None :
+                brightness_scale.set_sensitive(True)
         else :
             self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
-            brightness_scale.set_sensitive(False)
+            if brightness_scale != None :
+                brightness_scale.set_sensitive(False)
 
-    def on_groups_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale):
+    def on_groups_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale=None):
         if widget.get_active():
-            self.utility.put_group_action(bridge, auth_handler, index, active=True)
-            brightness_scale.set_sensitive(True)
+            self.rest_utility.put_group_action(bridge, auth_handler, index, active=True)
+            if brightness_scale != None :
+                brightness_scale.set_sensitive(True)
         else :
-            self.utility.put_group_action(bridge, auth_handler, index, active=False)
-            brightness_scale.set_sensitive(False)
+            self.rest_utility.put_group_action(bridge, auth_handler, index, active=False)
+            if brightness_scale != None :
+                brightness_scale.set_sensitive(False)
 
     def on_connect_button(self, button, bridge):
         try:
@@ -195,8 +199,13 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             lights_row = Handy.ExpanderRow()
             lights_row.set_title('Luci')
             for light_id in groups[index]['lights']:
+                switch = Gtk.Switch()
+                switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, light_id)
+                switch.set_valign(Gtk.Align.CENTER)
+                switch.show()
                 light_row = Handy.ActionRow()
                 light_row.set_title(groups[index]['lights'][light_id]['name'])
+                light_row.add(switch)
                 light_row.show()
                 lights_row.add(light_row)
             lights_row.show()
