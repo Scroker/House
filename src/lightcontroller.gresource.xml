@@ -2,6 +2,5 @@
 <gresources>
   <gresource prefix="/org/scroker/LightController">
     <file>window.ui</file>
-    <file>press-connect-button.ui</file>
   </gresource>
 </gresources>

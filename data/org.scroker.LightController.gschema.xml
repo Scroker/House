@@ -5,5 +5,9 @@
       <default>""</default>
       <summary>Device API rest auth id</summary>
     </key>
+	  <key type="s" name="hue-hub-user-name">
+      <default>""</default>
+      <summary>Device API rest auth id</summary>
+    </key>
 	</schema>
 </schemalist>

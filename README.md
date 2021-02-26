@@ -7,12 +7,12 @@ A simple GTK application project to control Philiphs Hue Hub
 Features:
 - Simple On/Off on single light
 - Brightness control on single light
+- Brightness control on groups section
 - Simple On/Off on single group
 - Find and connect to the Hub Philips Hue
 
 Todo:
 - Application icon required 
-- Brightness control on groups section
 - Change the name to lights and groups
 - Better organization of the project
 

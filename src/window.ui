@@ -5,8 +5,8 @@
   <requires lib="libhandy" version="0.0"/>
   <template class="LightcontrollerWindow" parent="GtkApplicationWindow">
     <property name="can-focus">False</property>
-    <property name="default-width">600</property>
-    <property name="default-height">300</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -23,7 +23,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="HdyPreferencesGroup" id="lights_preference_group">
+                  <object class="HdyPreferencesGroup" id="lights_preference_page">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="description" translatable="yes">La lista delle luci connesse all'hub philips hue</property>

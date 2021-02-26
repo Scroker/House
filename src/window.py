@@ -15,11 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import gi
+import socket
+import platform
 
 gi.require_version('Handy', '1')
 
 from gi.repository import Gtk, Gio, Handy
-from .bridge_utilities import BrigdeUtilities
+from .rest_utilities import RESTUtilities
+from .model import AuthenticationHandler
 
 @Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
 class LightcontrollerWindow(Gtk.ApplicationWindow):
@@ -32,24 +35,24 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
     press_button_label = Gtk.Template.Child()
     bridge_info_preference_group = Gtk.Template.Child()
     groups_preferences_page = Gtk.Template.Child()
-    lights_preference_group = Gtk.Template.Child()
+    lights_preference_page = Gtk.Template.Child()
     connect_button = Gtk.Template.Child()
-    utility = BrigdeUtilities()
+    rest_utility = RESTUtilities()
     settings = Gio.Settings.new('org.scroker.LightController')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.squeezer.connect("notify::visible-child",self.on_headerbar_squeezer_notify)
-        for bridge in self.utility.discover_bridges():
+        for bridge in self.rest_utility.discover_bridges():
             self.connect_button.connect('clicked', self.on_connect_button, bridge)
-            device_id = self.settings.get_string('device-id')
+            auth_handler = AuthenticationHandler(self.settings.get_string('device-id'))
             try:
-                config = self.utility.get_config(bridge, device_id)
+                config = self.rest_utility.get_config(bridge, auth_handler)
                 self.update_bridge_stack_view(config)
-                lights = self.utility.get_lights(bridge, device_id)
-                self.update_light_stack_view(lights, bridge, device_id)
-                groups = self.utility.get_groups(bridge, device_id)
-                self.update_groups_stack_view(groups, bridge, device_id)
+                lights = self.rest_utility.get_lights(bridge, auth_handler)
+                self.update_light_stack_view(lights, bridge, auth_handler)
+                groups = self.rest_utility.get_groups(bridge, auth_handler)
+                self.update_groups_stack_view(groups, bridge, auth_handler)
             except Exception as error:
                 self.connect_button.set_sensitive(True)
                 self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
@@ -58,41 +61,47 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
 	    child = squeezer.get_visible_child()
 	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
 
-    def on_light_scale_moved(self, widget, bridge, device_id, index):
-        self.utility.set_light_brightness(bridge, device_id, index, int(widget.get_value()))
+    def on_light_scale_moved(self, widget, bridge, auth_handler, index):
+        self.rest_utility.put_light_status(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
-    def on_light_switch_activated(self, widget, event, bridge, device_id, index, brightness_scale):
+    def on_groups_scale_moved(self, widget, bridge, auth_handler, index):
+        self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
+
+    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale):
         if widget.get_active():
-            self.utility.set_light_status(bridge, device_id, index, True)
+            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
             brightness_scale.set_sensitive(True)
         else :
-            self.utility.set_light_status(bridge, device_id, index, False)
+            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
             brightness_scale.set_sensitive(False)
 
-    def on_groups_switch_activated(self, widget, event, bridge, device_id, index):
+    def on_groups_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale):
         if widget.get_active():
-            self.utility.set_group_action(bridge, device_id, index, True)
+            self.utility.put_group_action(bridge, auth_handler, index, active=True)
+            brightness_scale.set_sensitive(True)
         else :
-            self.utility.set_group_action(bridge, device_id, index, False)
+            self.utility.put_group_action(bridge, auth_handler, index, active=False)
+            brightness_scale.set_sensitive(False)
 
     def on_connect_button(self, button, bridge):
         try:
-            device_id = self.utility.pair_with_the_bridge(bridge)
-            self.settings.set_string('device-id', device_id)
-            config = self.utility.get_config(bridge, device_id)
+            device_name = socket.host_name() + "#" + platform.system()
+            auth_handler = self.rest_utility.pair_with_the_bridge(bridge, device_name)
+            self.settings.set_string('device-id', auth_handler)
+            config = self.rest_utility.get_config(bridge, auth_handler)
             self.update_bridge_stack_view(config)
-            lights = self.utility.get_lights(bridge, device_id)
-            self.update_light_stack_view(lights, bridge, device_id)
+            lights = self.rest_utility.get_lights(bridge, auth_handler)
+            self.update_light_stack_view(lights, bridge, auth_handler)
             self.connect_button.set_sensitive(False)
             self.press_button_label.set_visible(False)
         except Exception as error:
             self.press_button_label.set_visible(True)
 
-    def update_light_stack_view(self, lights, bridge, device_id):
+    def update_light_stack_view(self, lights, bridge, auth_handler):
         for index in lights :
             brightness_ad = Gtk.Adjustment(lights[index]['state']['bri'], 0, 254, 5, 10, 0)
             brightness_scale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=brightness_ad)
-            brightness_scale.connect("value-changed", self.on_light_scale_moved, bridge, device_id, index)
+            brightness_scale.connect("value-changed", self.on_light_scale_moved, bridge, auth_handler, index)
             brightness_scale.set_valign(Gtk.Align.START)
             brightness_scale.set_digits(False)
             brightness_scale.set_hexpand(True)
@@ -100,7 +109,7 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             brightness_scale.show()
             switch = Gtk.Switch()
             switch.set_active(lights[index]['state']['on'])
-            switch.connect("notify::active", self.on_light_switch_activated, bridge, device_id, index, brightness_scale)
+            switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, index, brightness_scale)
             switch.set_valign(Gtk.Align.CENTER)
             switch.show()
             status_row = Handy.ActionRow()
@@ -116,7 +125,7 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             row.add(status_row)
             row.add(brightness_row)
             row.show()
-            self.lights_preference_group.add(row)
+            self.lights_preference_page.add(row)
 
     def update_bridge_stack_view(self, config):
         name_label = Gtk.Label()
@@ -160,20 +169,42 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
         self.bridge_info_preference_group.add(bridgeid_row)
         self.bridge_info_preference_group.add(timezone_row)
 
-    def update_groups_stack_view(self, groups, bridge, device_id):
+    def update_groups_stack_view(self, groups, bridge, auth_handler):
         for index in groups:
+            brightness_ad = Gtk.Adjustment(groups[index]['action']['bri'], 0, 254, 5, 10, 0)
+            brightness_scale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=brightness_ad)
+            brightness_scale.connect("value-changed", self.on_groups_scale_moved, bridge, auth_handler, index)
+            brightness_scale.set_valign(Gtk.Align.START)
+            brightness_scale.set_digits(False)
+            brightness_scale.set_hexpand(True)
+            brightness_scale.set_sensitive(groups[index]['action']['on'])
+            brightness_scale.show()
             switch = Gtk.Switch()
             switch.set_active(groups[index]['action']['on'])
-            switch.connect("notify::active", self.on_groups_switch_activated, bridge, device_id, index)
+            switch.connect("notify::active", self.on_groups_switch_activated, bridge, auth_handler, index, brightness_scale)
             switch.set_valign(Gtk.Align.CENTER)
             switch.show()
             status_row = Handy.ActionRow()
             status_row.set_title('Accendi Gruppo')
             status_row.add(switch)
             status_row.show()
+            brightness_row = Handy.ActionRow()
+            brightness_row.set_title('Luminosità')
+            brightness_row.add(brightness_scale)
+            brightness_row.show()
+            lights_row = Handy.ExpanderRow()
+            lights_row.set_title('Luci')
+            for light_id in groups[index]['lights']:
+                light_row = Handy.ActionRow()
+                light_row.set_title(groups[index]['lights'][light_id]['name'])
+                light_row.show()
+                lights_row.add(light_row)
+            lights_row.show()
             preference_group = Handy.PreferencesGroup()
             preference_group.set_title(groups[index]['name'])
             preference_group.add(status_row)
+            preference_group.add(brightness_row)
+            preference_group.add(lights_row)
             preference_group.show()
             self.groups_preferences_page.add(preference_group)
 
