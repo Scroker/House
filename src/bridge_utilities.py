@@ -33,11 +33,11 @@ class BrigdeUtilities:
 
     def get_groups(self, bridge, device_id):
         response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/groups')
-        for groups in response.json():
-            if 'error' in groups:
-                raise Exception(groups['error']['description'])
-            else :
-                return groups
+        groups = response.json()
+        if 'error' in groups:
+            raise Exception(groups['error']['description'])
+        else :
+            return groups
 
     def get_config(self, bridge, device_id):
         response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/config')
@@ -47,37 +47,13 @@ class BrigdeUtilities:
         else :
             return config
 
-    def get_schedules(self, bridge, device_id):
-        response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/schedules')
-        for schedules in response.json():
-            if 'error' in schedules:
-                raise Exception(schedules['error']['description'])
-            else :
-                return schedules
-
-    def get_scenes(self, bridge, device_id):
-        response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/scenes')
-        for scenes in response.json():
-            if 'error' in scenes:
-                raise Exception(scenes['error']['description'])
-            else :
-                return scenes
-
-    def get_sensors(self, bridge, device_id):
-        response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/sensors')
-        for sensors in response.json():
-            if 'error' in sensors:
-                raise Exception(sensors['error']['description'])
-            else :
-                return sensors
-
-    def get_rules(self, bridge, device_id):
-        response = requests.get('http://' + bridge.internalIpAddress + '/api/' + device_id + '/rules')
-        for rules in response.json():
-            if 'error' in rules:
-                raise Exception(rules['error']['description'])
-            else :
-                return rules
+    def set_group_action(self, bridge, device_id, index, status):
+        response = requests.put('http://' + bridge.internalIpAddress + '/api/' + device_id + '/groups/' + index + '/action', json={"on" : status})
+        for set_light in response.json():
+            if 'error' in set_light:
+                raise Exception(set_light['error']['description'])
+            if 'success' in set_light:
+                return True
 
     def set_light_status(self, bridge, device_id, index, status):
         response = requests.put('http://' + bridge.internalIpAddress + '/api/' + device_id + '/lights/' + index + '/state', json={"on" : status})

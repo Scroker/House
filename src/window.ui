@@ -41,7 +41,7 @@
               </packing>
             </child>
             <child>
-              <object class="HdyPreferencesPage">
+              <object class="HdyPreferencesPage" id="groups_preferences_page">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
               </object>
@@ -57,89 +57,13 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="HdyPreferencesGroup">
+                  <object class="HdyPreferencesGroup" id="bridge_info_preference_group">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="title" translatable="yes">Bridge</property>
+                    <property name="description" translatable="yes">Infromazioni sul bridge Hue</property>
+                    <property name="title" translatable="yes">Informazioni Bridge</property>
                     <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="title" translatable="yes">Nome</property>
-                        <property name="use-underline">True</property>
-                        <child>
-                          <object class="GtkLabel" id="bridge_name_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">char</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="title" translatable="yes">Ip Address</property>
-                        <property name="use-underline">True</property>
-                        <child>
-                          <object class="GtkLabel" id="bridge_ip_address_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">char</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="title" translatable="yes">Indirizzo MAC</property>
-                        <property name="use-underline">True</property>
-                        <child>
-                          <object class="GtkLabel" id="bridge_mac_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">char</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="title" translatable="yes">ID del Bridge</property>
-                        <property name="use-underline">True</property>
-                        <child>
-                          <object class="GtkLabel" id="bridge_id_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">char</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="title" translatable="yes">Api-Key</property>
-                        <property name="use-underline">True</property>
-                        <child>
-                          <object class="GtkLabel" id="bridge_api_key_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="wrap">True</property>
-                            <property name="wrap-mode">char</property>
-                          </object>
-                        </child>
-                      </object>
+                      <placeholder/>
                     </child>
                   </object>
                 </child>
@@ -152,12 +76,35 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
-                          <object class="GtkButton" id="connect_button">
-                            <property name="label" translatable="yes">Trova un Bridge</property>
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkButton" id="connect_button">
+                                <property name="label" translatable="yes">Trova un Bridge</property>
+                                <property name="visible">True</property>
+                                <property name="sensitive">False</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="press_button_label">
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Press Hub Button</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -220,21 +167,6 @@
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="menu_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">False</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">open-menu-symbolic</property>
               </object>
             </child>
           </object>
