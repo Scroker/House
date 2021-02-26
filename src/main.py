@@ -20,7 +20,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gdk, Gio
 
 from .window import LightcontrollerWindow
 
@@ -31,11 +31,17 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
+        style_provider = Gtk.CssProvider()
+        style_provider.load_from_resource('/org/scroker/LightController/style.css')
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            style_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
         win = self.props.active_window
         if not win:
             win = LightcontrollerWindow(application=self)
         win.present()
-
 
 def main(version):
     app = Application()
