@@ -1,6 +1,6 @@
 # LightController
 
-A simple GTK application to control philiphs hue lights
+A simple GTK application project to control Philiphs Hue Hub
 
 ![LightController screenshot](https://github.com/Scroker/Photos/blob/main/LightControllerScreen/Schermata%20del%202021-02-26%2003-29-32.png)
 
