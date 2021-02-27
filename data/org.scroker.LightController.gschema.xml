@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="lightcontroller">
 	<schema id="org.scroker.LightController" path="/org/scroker/LightController/">
-	  <key type="s" name="device-id">
+	  <key type="s" name="hue-hub-id">
       <default>""</default>
-      <summary>Device API rest auth id</summary>
+      <summary>Device API ip address</summary>
+    </key>
+	  <key type="s" name="hue-hub-ip-address">
+      <default>""</default>
+      <summary>Device API ip address</summary>
     </key>
 	  <key type="s" name="hue-hub-user-name">
       <default>""</default>

@@ -22,6 +22,7 @@ gi.require_version('Handy', '1')
 
 from gi.repository import Gtk, Gio, Handy
 from .rest_utilities import RESTUtilities
+from .model import Bridge
 from .model import AuthenticationHandler
 
 @Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
@@ -32,25 +33,25 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
     squeezer = Gtk.Template.Child()
     headerbar_switcher = Gtk.Template.Child()
     bottom_switcher = Gtk.Template.Child()
-    press_button_label = Gtk.Template.Child()
     bridge_preference_page = Gtk.Template.Child()
     groups_preferences_page = Gtk.Template.Child()
     lights_preference_page = Gtk.Template.Child()
     connect_button = Gtk.Template.Child()
+    press_button_label = Gtk.Template.Child()
     rest_utility = RESTUtilities()
     settings = Gio.Settings.new('org.scroker.LightController')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
+        auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+        self.connect_button.connect('clicked', self.on_connect_button, bridge)
         self.squeezer.connect("notify::visible-child",self.on_headerbar_squeezer_notify)
-        for bridge in self.rest_utility.discover_bridges():
-            self.connect_button.connect('clicked', self.on_connect_button, bridge)
-            auth_handler = AuthenticationHandler(self.settings.get_string('device-id'))
-            try:
-                self.update_stack_view(bridge, auth_handler)
-            except Exception as error:
-                self.connect_button.set_sensitive(True)
-                self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
+        try:
+            self.update_stack_view(bridge, auth_handler)
+        except Exception as error:
+            self.connect_button.set_sensitive(True)
+            self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
     # GtkSqueeze on notify visible child functions
     def on_headerbar_squeezer_notify(self, squeezer, event):
@@ -87,16 +88,20 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
 
     # GtkButton on click functions
     def on_connect_button(self, button, bridge):
-        try:
-            device_name = socket.gethostname() + "#" + platform.system()
-            auth_handler = self.rest_utility.pair_with_the_bridge(bridge, device_name)
-            self.update_stack_view(bridge, auth_handler)
-            self.settings.set_string('device-id', auth_handler.user_name)
-            self.connect_button.set_sensitive(False)
-            self.press_button_label.set_visible(False)
-        except Exception as error:
-            if '\'type\': 101' in str(error) :
-                self.press_button_label.set_visible(True)
+        for bridge in self.rest_utility.discover_bridges():
+            try:
+                device_name = socket.gethostname() + "#" + platform.system()
+                auth_handler = self.rest_utility.pair_with_the_bridge(bridge, device_name)
+                self.update_stack_view(bridge, auth_handler)
+                self.settings.set_string('hue-hub-id', bridge.bridge_id)
+                self.settings.set_string('hue-hub-ip-address', bridge.internal_ip_address)
+                self.settings.set_string('hue-hub-user-name', auth_handler.user_name)
+                self.connect_button.set_sensitive(False)
+                self.press_button_label.set_visible(False)
+                break
+            except Exception as error:
+                if '\'type\': 101' in str(error) :
+                    self.press_button_label.set_visible(True)
 
     # GtkStackView update functions
     def update_stack_view(self, bridge, auth_handler):
