@@ -66,25 +66,23 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
         self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
     # switch control function
-    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale=None):
+    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index):
         if widget.get_active():
             self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
-            if brightness_scale != None :
-                brightness_scale.set_sensitive(True)
         else :
             self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
-            if brightness_scale != None :
-                brightness_scale.set_sensitive(False)
 
-    def on_groups_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale=None):
-        if widget.get_active():
+    def on_light_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
+        if widget.get_enable_expansion():
+            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
+        else :
+            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
+
+    def on_groups_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
+        if widget.get_enable_expansion():
             self.rest_utility.put_group_action(bridge, auth_handler, index, active=True)
-            if brightness_scale != None :
-                brightness_scale.set_sensitive(True)
         else :
             self.rest_utility.put_group_action(bridge, auth_handler, index, active=False)
-            if brightness_scale != None :
-                brightness_scale.set_sensitive(False)
 
     # GtkButton on click functions
     def on_connect_button(self, button, bridge):
@@ -122,25 +120,17 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             brightness_scale.set_valign(Gtk.Align.START)
             brightness_scale.set_digits(False)
             brightness_scale.set_hexpand(True)
-            brightness_scale.set_sensitive(lights[index]['state']['on'])
             brightness_scale.show()
-            switch = Gtk.Switch()
-            switch.set_active(lights[index]['state']['on'])
-            switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, index, brightness_scale)
-            switch.set_valign(Gtk.Align.CENTER)
-            switch.show()
-            status_row = Handy.ActionRow()
-            status_row.set_title('Accesa')
-            status_row.add(switch)
-            status_row.show()
             brightness_row = Handy.ActionRow()
             brightness_row.set_title('Luminosità')
             brightness_row.add(brightness_scale)
             brightness_row.show()
             lights_row = Handy.ExpanderRow()
             lights_row.set_title('{}'.format(lights[index]['name']))
-            lights_row.add(status_row)
             lights_row.add(brightness_row)
+            lights_row.set_enable_expansion(lights[index]['state']['on'])
+            lights_row.set_show_enable_switch(True)
+            lights_row.connect("notify::enable-expansion", self.on_light_expander_switch_activated, bridge, auth_handler, index)
             lights_row.show()
             preference_group.add(lights_row)
         preference_group.show()
@@ -154,21 +144,18 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             brightness_scale.set_valign(Gtk.Align.START)
             brightness_scale.set_digits(False)
             brightness_scale.set_hexpand(True)
-            brightness_scale.set_sensitive(groups[index]['action']['on'])
             brightness_scale.show()
-            switch = Gtk.Switch()
-            switch.set_active(groups[index]['action']['on'])
-            switch.connect("notify::active", self.on_groups_switch_activated, bridge, auth_handler, index, brightness_scale)
-            switch.set_valign(Gtk.Align.CENTER)
-            switch.show()
-            status_row = Handy.ActionRow()
-            status_row.set_title('Accendi Gruppo')
-            status_row.add(switch)
-            status_row.show()
             brightness_row = Handy.ActionRow()
             brightness_row.set_title('Luminosità')
             brightness_row.add(brightness_scale)
             brightness_row.show()
+            status_row = Handy.ExpanderRow()
+            status_row.set_title('Accendi Gruppo')
+            status_row.add(brightness_row)
+            status_row.set_enable_expansion(groups[index]['action']['on'])
+            status_row.set_show_enable_switch(True)
+            status_row.connect("notify::enable-expansion", self.on_groups_expander_switch_activated, bridge, auth_handler, index)
+            status_row.show()
             lights_row = Handy.ExpanderRow()
             lights_row.set_title('Luci')
             for light_id in groups[index]['lights']:
@@ -185,7 +172,6 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             preference_group = Handy.PreferencesGroup()
             preference_group.set_title(groups[index]['name'])
             preference_group.add(status_row)
-            preference_group.add(brightness_row)
             preference_group.add(lights_row)
             preference_group.show()
             self.groups_preferences_page.add(preference_group)

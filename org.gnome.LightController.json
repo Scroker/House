@@ -50,7 +50,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/giorgiodramis/Progetti/LightController"
+                    "url" : "https://github.com/Scroker/LightController",
+		    "tag" : "0.1.1"
                 }
             ]
         }
