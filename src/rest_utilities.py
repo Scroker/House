@@ -4,6 +4,7 @@ import requests
 
 from gi.repository import GObject
 from .model import Bridge
+from .model import AuthenticationHandler
 
 class RESTUtilities(GObject.Object):
 
@@ -24,8 +25,7 @@ class RESTUtilities(GObject.Object):
             if 'error' in pairing_info:
                 raise Exception(pairing_info['error'])
             if 'success' in pairing_info:
-                authentication_handler = AuthenticationHandler()
-                authentication_handler.user_name = pairing_info['success']['username']
+                authentication_handler = AuthenticationHandler(pairing_info['success']['username'])
                 return authentication_handler
 
     def get_config(self, bridge, authentication_handler):

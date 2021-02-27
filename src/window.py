@@ -33,7 +33,7 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
     headerbar_switcher = Gtk.Template.Child()
     bottom_switcher = Gtk.Template.Child()
     press_button_label = Gtk.Template.Child()
-    bridge_info_preference_group = Gtk.Template.Child()
+    bridge_preference_page = Gtk.Template.Child()
     groups_preferences_page = Gtk.Template.Child()
     lights_preference_page = Gtk.Template.Child()
     connect_button = Gtk.Template.Child()
@@ -47,26 +47,24 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             self.connect_button.connect('clicked', self.on_connect_button, bridge)
             auth_handler = AuthenticationHandler(self.settings.get_string('device-id'))
             try:
-                config = self.rest_utility.get_config(bridge, auth_handler)
-                self.update_bridge_stack_view(config)
-                lights = self.rest_utility.get_lights(bridge, auth_handler)
-                self.update_light_stack_view(lights, bridge, auth_handler)
-                groups = self.rest_utility.get_groups(bridge, auth_handler)
-                self.update_groups_stack_view(groups, bridge, auth_handler)
+                self.update_stack_view(bridge, auth_handler)
             except Exception as error:
                 self.connect_button.set_sensitive(True)
                 self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
+    # GtkSqueeze on notify visible child functions
     def on_headerbar_squeezer_notify(self, squeezer, event):
 	    child = squeezer.get_visible_child()
 	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
 
+    # Light GtkScale on scale signal functions
     def on_light_scale_moved(self, widget, bridge, auth_handler, index):
         self.rest_utility.put_light_status(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
     def on_groups_scale_moved(self, widget, bridge, auth_handler, index):
         self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
+    # switch control function
     def on_light_switch_activated(self, widget, event, bridge, auth_handler, index, brightness_scale=None):
         if widget.get_active():
             self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
@@ -87,21 +85,31 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             if brightness_scale != None :
                 brightness_scale.set_sensitive(False)
 
+    # GtkButton on click functions
     def on_connect_button(self, button, bridge):
         try:
-            device_name = socket.host_name() + "#" + platform.system()
+            device_name = socket.gethostname() + "#" + platform.system()
             auth_handler = self.rest_utility.pair_with_the_bridge(bridge, device_name)
-            self.settings.set_string('device-id', auth_handler)
-            config = self.rest_utility.get_config(bridge, auth_handler)
-            self.update_bridge_stack_view(config)
-            lights = self.rest_utility.get_lights(bridge, auth_handler)
-            self.update_light_stack_view(lights, bridge, auth_handler)
+            self.update_stack_view(bridge, auth_handler)
+            self.settings.set_string('device-id', auth_handler.user_name)
             self.connect_button.set_sensitive(False)
             self.press_button_label.set_visible(False)
         except Exception as error:
-            self.press_button_label.set_visible(True)
+            if '\'type\': 101' in str(error) :
+                self.press_button_label.set_visible(True)
+
+    # GtkStackView update functions
+    def update_stack_view(self, bridge, auth_handler):
+        config = self.rest_utility.get_config(bridge, auth_handler)
+        self.update_bridge_stack_view(config)
+        lights = self.rest_utility.get_lights(bridge, auth_handler)
+        self.update_light_stack_view(lights, bridge, auth_handler)
+        groups = self.rest_utility.get_groups(bridge, auth_handler)
+        self.update_groups_stack_view(groups, bridge, auth_handler)
 
     def update_light_stack_view(self, lights, bridge, auth_handler):
+        preference_group = Handy.PreferencesGroup()
+        preference_group.set_title('Luci')
         for index in lights :
             brightness_ad = Gtk.Adjustment(lights[index]['state']['bri'], 0, 254, 5, 10, 0)
             brightness_scale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=brightness_ad)
@@ -124,54 +132,14 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             brightness_row.set_title('Luminosità')
             brightness_row.add(brightness_scale)
             brightness_row.show()
-            row = Handy.ExpanderRow()
-            row.set_title('{}'.format(lights[index]['name']))
-            row.add(status_row)
-            row.add(brightness_row)
-            row.show()
-            self.lights_preference_page.add(row)
-
-    def update_bridge_stack_view(self, config):
-        name_label = Gtk.Label()
-        name_label.set_label(config['name'])
-        name_label.show()
-        name_row = Handy.ActionRow()
-        name_row.set_title('Name')
-        name_row.add(name_label)
-        name_row.show()
-        bridgeid_label = Gtk.Label()
-        bridgeid_label.set_label(config['bridgeid'])
-        bridgeid_label.show()
-        bridgeid_row = Handy.ActionRow()
-        bridgeid_row.set_title('Bridge ID')
-        bridgeid_row.add(bridgeid_label)
-        bridgeid_row.show()
-        ipaddress_label = Gtk.Label()
-        ipaddress_label.set_label(config['ipaddress'])
-        ipaddress_label.show()
-        ipaddress_row = Handy.ActionRow()
-        ipaddress_row.set_title('Indirizzo IP')
-        ipaddress_row.add(ipaddress_label)
-        ipaddress_row.show()
-        mac_label = Gtk.Label()
-        mac_label.set_label(config['mac'])
-        mac_label.show()
-        mac_row = Handy.ActionRow()
-        mac_row.set_title('Indirizzo MAC')
-        mac_row.add(mac_label)
-        mac_row.show()
-        timezone_label = Gtk.Label()
-        timezone_label.set_label(config['timezone'])
-        timezone_label.show()
-        timezone_row = Handy.ActionRow()
-        timezone_row.set_title('Time Zone')
-        timezone_row.add(timezone_label)
-        timezone_row.show()
-        self.bridge_info_preference_group.add(name_row)
-        self.bridge_info_preference_group.add(ipaddress_row)
-        self.bridge_info_preference_group.add(mac_row)
-        self.bridge_info_preference_group.add(bridgeid_row)
-        self.bridge_info_preference_group.add(timezone_row)
+            lights_row = Handy.ExpanderRow()
+            lights_row.set_title('{}'.format(lights[index]['name']))
+            lights_row.add(status_row)
+            lights_row.add(brightness_row)
+            lights_row.show()
+            preference_group.add(lights_row)
+        preference_group.show()
+        self.lights_preference_page.add(preference_group)
 
     def update_groups_stack_view(self, groups, bridge, auth_handler):
         for index in groups:
@@ -216,4 +184,43 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
             preference_group.add(lights_row)
             preference_group.show()
             self.groups_preferences_page.add(preference_group)
+
+    def update_bridge_stack_view(self, config):
+        preference_group = Handy.PreferencesGroup()
+        preference_group.set_title(config['name'])
+        bridgeid_label = Gtk.Label()
+        bridgeid_label.set_label(config['bridgeid'])
+        bridgeid_label.show()
+        bridgeid_row = Handy.ActionRow()
+        bridgeid_row.set_title('Bridge ID')
+        bridgeid_row.add(bridgeid_label)
+        bridgeid_row.show()
+        ipaddress_label = Gtk.Label()
+        ipaddress_label.set_label(config['ipaddress'])
+        ipaddress_label.show()
+        ipaddress_row = Handy.ActionRow()
+        ipaddress_row.set_title('Indirizzo IP')
+        ipaddress_row.add(ipaddress_label)
+        ipaddress_row.show()
+        mac_label = Gtk.Label()
+        mac_label.set_label(config['mac'])
+        mac_label.show()
+        mac_row = Handy.ActionRow()
+        mac_row.set_title('Indirizzo MAC')
+        mac_row.add(mac_label)
+        mac_row.show()
+        timezone_label = Gtk.Label()
+        timezone_label.set_label(config['timezone'])
+        timezone_label.show()
+        timezone_row = Handy.ActionRow()
+        timezone_row.set_title('Time Zone')
+        timezone_row.add(timezone_label)
+        timezone_row.show()
+        preference_group.add(ipaddress_row)
+        preference_group.add(mac_row)
+        preference_group.add(bridgeid_row)
+        preference_group.add(timezone_row)
+        preference_group.show()
+        self.bridge_preference_page.add(preference_group)
+
 
