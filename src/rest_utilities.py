@@ -28,7 +28,7 @@ class RESTUtilities(GObject.Object):
                 authentication_handler = AuthenticationHandler(pairing_info['success']['username'])
                 return authentication_handler
 
-    def get_config(self, bridge, authentication_handler):
+    def get_config(self, bridge:Bridge, authentication_handler:AuthenticationHandler):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/config')
         config = response.json()
         if 'error' in config:
@@ -36,7 +36,7 @@ class RESTUtilities(GObject.Object):
         else :
             return config
 
-    def get_light(self, bridge, authentication_handler, index):
+    def get_light(self, bridge:Bridge, authentication_handler:AuthenticationHandler, index:int):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + index)
         light = response.json()
         if 'error' in light:
@@ -44,7 +44,7 @@ class RESTUtilities(GObject.Object):
         else :
             return light
 
-    def get_lights(self, bridge, authentication_handler):
+    def get_lights(self, bridge:Bridge, authentication_handler:AuthenticationHandler):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights')
         lights = response.json()
         if 'error' in lights:
@@ -52,7 +52,7 @@ class RESTUtilities(GObject.Object):
         else :
             return lights
 
-    def get_group(self, bridge, authentication_handler, index):
+    def get_group(self, bridge:Bridge, authentication_handler:AuthenticationHandler, index:int):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index)
         group = response.json()
         if 'error' in group:
@@ -65,7 +65,7 @@ class RESTUtilities(GObject.Object):
             group['lights'] = lights
             return groups
 
-    def get_groups(self, bridge, authentication_handler):
+    def get_groups(self, bridge:Bridge, authentication_handler:AuthenticationHandler):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups')
         groups = response.json()
         if 'error' in groups:
@@ -79,7 +79,7 @@ class RESTUtilities(GObject.Object):
                 groups[index]['lights'] = lights
             return groups
 
-    def post_new_group(self, bridge, authentication_handler, index, name:str=None, lights:list=None, sensors:list=None, group_type:str=None, group_class:str=None):
+    def post_new_group(self, bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str=None, lights:list=None, sensors:list=None, group_type:str=None, group_class:str=None):
         request = {}
         if name != None :
             request["name"] = name
@@ -98,7 +98,7 @@ class RESTUtilities(GObject.Object):
             if 'success' in set_group_response:
                 return set_group_response['success']['id']
 
-    def put_light_status(self, bridge, authentication_handler, index, active:str=None , brightness:int=None, alert:str=None, mode:str=None, reachable:bool=None):
+    def put_light_status(self, bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, active:str=None , brightness:int=None, alert:str=None, mode:str=None, reachable:bool=None):
         request = {}
         if active != None :
             request["on"] = active
@@ -117,7 +117,7 @@ class RESTUtilities(GObject.Object):
             if 'success' in set_light_response:
                 return set_light_response['success']
 
-    def put_group_action(self, bridge, authentication_handler, index, active:str=None, brightness:int=None, alert:str=None):
+    def put_group_action(self, bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, active:str=None, brightness:int=None, alert:str=None):
         request = {}
         if active != None :
             request["on"] = active
