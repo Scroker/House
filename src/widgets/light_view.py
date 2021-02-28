@@ -5,7 +5,7 @@ gi.require_version('Handy', '1')
 from .utilities import RESTUtilities
 from gi.repository import Gtk, Handy
 
-@Gtk.Template(resource_path='/org/scroker/LightController/light_view.ui')
+@Gtk.Template(resource_path='/org/scroker/LightController/widgets/light_view.ui')
 class LightExpanderRow(Handy.ExpanderRow):
     __gtype_name__ = 'LightExpanderRow'
 
@@ -28,6 +28,7 @@ class LightExpanderRow(Handy.ExpanderRow):
         self.light_brightness_scale.connect("value-changed", self.on_light_scale_moved, bridge, auth_handler, index)
         self.apply_light_rename_button.connect('clicked', self.on_apply_rename_button, bridge, auth_handler, index)
         self.cancel_light_rename_button.connect('clicked', self.on_cancel_rename_button)
+        self.light_modify_action_row.set_title(light['name'])
         self.delete_light_button.connect('clicked', self.on_delete_light_button)
         self.light_rename_button.connect('clicked', self.on_light_rename_button)
 

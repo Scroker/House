@@ -5,7 +5,7 @@ gi.require_version('Handy', '1')
 from gi.repository import Gtk, Handy
 from .utilities import RESTUtilities
 
-@Gtk.Template(resource_path='/org/scroker/LightController/group_view.ui')
+@Gtk.Template(resource_path='/org/scroker/LightController/widgets/group_view.ui')
 class GroupViewPreferenceGroup(Handy.PreferencesGroup):
     __gtype_name__ = 'GroupViewPreferenceGroup'
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/scroker/LightController">
-    <file>style.css</file>
-    <file>group_view.ui</file>
-    <file>light_view.ui</file>
-    <file>bridge_view.ui</file>
+    <file>widgets/style.css</file>
+    <file>widgets/group_view.ui</file>
+    <file>widgets/light_view.ui</file>
+    <file>widgets/bridge_view.ui</file>
     <file>window.ui</file>
   </gresource>
 </gresources>

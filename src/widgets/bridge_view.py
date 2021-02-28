@@ -4,7 +4,7 @@ gi.require_version('Handy', '1')
 
 from gi.repository import Gtk, Handy
 
-@Gtk.Template(resource_path='/org/scroker/LightController/bridge_view.ui')
+@Gtk.Template(resource_path='/org/scroker/LightController/widgets/bridge_view.ui')
 class BridgePreferenceGroup(Handy.PreferencesGroup):
     __gtype_name__ = 'BridgePreferenceGroup'
 
