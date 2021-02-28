@@ -24,9 +24,11 @@ from gi.repository import Gtk, Gio, Handy
 from .rest_utilities import RESTUtilities
 from .model import Bridge
 from .model import AuthenticationHandler
+from .group_view import GroupViewPreferenceGroup
+from .light_view import LightExpanderRow
 
 @Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
-class LightcontrollerWindow(Gtk.ApplicationWindow):
+class LightcontrollerWindow(Handy.ApplicationWindow):
     __gtype_name__ = 'LightcontrollerWindow'
 
     Handy.init()
@@ -58,32 +60,6 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
 	    child = squeezer.get_visible_child()
 	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
 
-    # Light GtkScale on scale signal functions
-    def on_light_scale_moved(self, widget, bridge, auth_handler, index):
-        self.rest_utility.put_light_status(bridge, auth_handler, index, brightness=int(widget.get_value()))
-
-    def on_groups_scale_moved(self, widget, bridge, auth_handler, index):
-        self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
-
-    # switch control function
-    def on_light_switch_activated(self, widget, event, bridge, auth_handler, index):
-        if widget.get_active():
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
-        else :
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
-
-    def on_light_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
-        if widget.get_enable_expansion():
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
-        else :
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
-
-    def on_groups_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
-        if widget.get_enable_expansion():
-            self.rest_utility.put_group_action(bridge, auth_handler, index, active=True)
-        else :
-            self.rest_utility.put_group_action(bridge, auth_handler, index, active=False)
-
     # GtkButton on click functions
     def on_connect_button(self, button, bridge):
         for bridge in self.rest_utility.discover_bridges():
@@ -113,67 +89,15 @@ class LightcontrollerWindow(Gtk.ApplicationWindow):
     def update_light_stack_view(self, lights, bridge, auth_handler):
         preference_group = Handy.PreferencesGroup()
         preference_group.set_title('Luci')
-        for index in lights :
-            brightness_ad = Gtk.Adjustment(lights[index]['state']['bri'], 0, 254, 5, 10, 0)
-            brightness_scale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=brightness_ad)
-            brightness_scale.connect("value-changed", self.on_light_scale_moved, bridge, auth_handler, index)
-            brightness_scale.set_valign(Gtk.Align.START)
-            brightness_scale.set_digits(False)
-            brightness_scale.set_hexpand(True)
-            brightness_scale.show()
-            brightness_row = Handy.ActionRow()
-            brightness_row.set_title('Luminosità')
-            brightness_row.add(brightness_scale)
-            brightness_row.show()
-            lights_row = Handy.ExpanderRow()
-            lights_row.set_title('{}'.format(lights[index]['name']))
-            lights_row.add(brightness_row)
-            lights_row.set_enable_expansion(lights[index]['state']['on'])
-            lights_row.set_show_enable_switch(True)
-            lights_row.connect("notify::enable-expansion", self.on_light_expander_switch_activated, bridge, auth_handler, index)
-            lights_row.show()
-            preference_group.add(lights_row)
+        for light_id in lights :
+            row = LightExpanderRow(bridge, auth_handler, lights[light_id], light_id)
+            preference_group.add(row)
         preference_group.show()
         self.lights_preference_page.add(preference_group)
 
     def update_groups_stack_view(self, groups, bridge, auth_handler):
         for index in groups:
-            brightness_ad = Gtk.Adjustment(groups[index]['action']['bri'], 0, 254, 5, 10, 0)
-            brightness_scale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=brightness_ad)
-            brightness_scale.connect("value-changed", self.on_groups_scale_moved, bridge, auth_handler, index)
-            brightness_scale.set_valign(Gtk.Align.START)
-            brightness_scale.set_digits(False)
-            brightness_scale.set_hexpand(True)
-            brightness_scale.show()
-            brightness_row = Handy.ActionRow()
-            brightness_row.set_title('Luminosità')
-            brightness_row.add(brightness_scale)
-            brightness_row.show()
-            status_row = Handy.ExpanderRow()
-            status_row.set_title('Accendi Gruppo')
-            status_row.add(brightness_row)
-            status_row.set_enable_expansion(groups[index]['action']['on'])
-            status_row.set_show_enable_switch(True)
-            status_row.connect("notify::enable-expansion", self.on_groups_expander_switch_activated, bridge, auth_handler, index)
-            status_row.show()
-            lights_row = Handy.ExpanderRow()
-            lights_row.set_title('Luci')
-            for light_id in groups[index]['lights']:
-                switch = Gtk.Switch()
-                switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, light_id)
-                switch.set_valign(Gtk.Align.CENTER)
-                switch.show()
-                light_row = Handy.ActionRow()
-                light_row.set_title(groups[index]['lights'][light_id]['name'])
-                light_row.add(switch)
-                light_row.show()
-                lights_row.add(light_row)
-            lights_row.show()
-            preference_group = Handy.PreferencesGroup()
-            preference_group.set_title(groups[index]['name'])
-            preference_group.add(status_row)
-            preference_group.add(lights_row)
-            preference_group.show()
+            preference_group = GroupViewPreferenceGroup(bridge, auth_handler, groups[index], index)
             self.groups_preferences_page.add(preference_group)
 
     def update_bridge_stack_view(self, config):

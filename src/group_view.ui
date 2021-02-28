@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <requires lib="libhandy" version="0.0"/>
+  <object class="GtkAdjustment" id="group_light_adjustment">
+    <property name="upper">254</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <template class="GroupViewPreferenceGroup" parent="HdyPreferencesGroup">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="HdyExpanderRow" id="group_expander_row">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title">Accendi Gruppo</property>
+        <property name="show-enable-switch">True</property>
+        <child>
+          <object class="HdyActionRow">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="title" translatable="yes">Luminosità</property>
+            <child>
+              <object class="GtkScale" id="group_light_scale">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="adjustment">group_light_adjustment</property>
+                <property name="draw-value">False</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="HdyExpanderRow" id="groups_lights_expander_row">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title">Luci</property>
+        <child>
+          <object class="HdyActionRow" id="add_light_action_row">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="title" translatable="yes">Aggiungi un dispositivo al gruppo</property>
+            <property name="icon-name">list-add-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
