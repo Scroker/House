@@ -25,8 +25,9 @@ from .utilities import RESTUtilities
 from .model import Bridge
 from .model import AuthenticationHandler
 from .group_view import GroupViewPreferenceGroup
-from .light_view import LightExpanderRow
+from .light_view import LightPreferencesRow
 from .bridge_view import BridgePreferenceGroup
+from .rename_row import RenameRowWidget
 
 @Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
 class LightcontrollerWindow(Handy.ApplicationWindow):
@@ -43,13 +44,25 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
     press_button_label = Gtk.Template.Child()
     name_new_group_entry = Gtk.Template.Child()
     add_new_group_button = Gtk.Template.Child()
+    headerbar_enable_modification_button = Gtk.Template.Child()
+    headerbar_add_button = Gtk.Template.Child()
+    add_group_preference_group = Gtk.Template.Child()
+    header_bar_info_button = Gtk.Template.Child()
+    rename_rows = []
+    control_rows = []
+    groups_preferences = []
+    main_stack = Gtk.Template.Child()
     settings = Gio.Settings.new('org.scroker.LightController')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+        self.main_stack.connect("notify::visible-child", self.vc_changed)
+        self.header_bar_info_button.connect('clicked', self.hello_word)
         self.connect_button.connect('clicked', self.on_connect_button, bridge)
+        self.headerbar_add_button.connect('toggled', self.on_add_modifications, bridge)
+        self.headerbar_enable_modification_button.connect('toggled', self.on_enable_modifications, bridge)
         self.add_new_group_button.connect('clicked', self.on_add_group_button, bridge, auth_handler, self.name_new_group_entry)
         self.squeezer.connect("notify::visible-child",self.on_headerbar_squeezer_notify)
         try:
@@ -58,10 +71,47 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
             self.connect_button.set_sensitive(True)
             self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
+    def hello_word(self, widget):
+        print('Hello Word')
+
+
+    def vc_changed(self, widget, arg):
+        if widget.get_visible_child_name() == 'lights' or widget.get_visible_child_name() == 'bridge':
+            self.headerbar_add_button.set_visible(False)
+        else :
+            self.headerbar_add_button.set_visible(True)
+
     # GtkSqueeze on notify visible child functions
     def on_headerbar_squeezer_notify(self, squeezer, event):
 	    child = squeezer.get_visible_child()
 	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
+
+    def on_add_modifications(self, widget, event):
+        if not widget.get_active() :
+            self.add_group_preference_group.set_visible(False)
+        else :
+            self.add_group_preference_group.set_visible(True)
+
+    def on_enable_modifications(self, widget, event):
+        for index in range(len(self.rename_rows)) :
+            if not widget.get_active() :
+                self.rename_rows[index].set_visible(False)
+                self.control_rows[index].set_visible(True)
+            else :
+                self.rename_rows[index].set_visible(True)
+                self.control_rows[index].set_visible(False)
+        for index in range(len(self.groups_preferences)):
+            if not widget.get_active() :
+                self.groups_preferences[index].group_modify_action_row.set_visible(False)
+                self.groups_preferences[index].group_rename_action_row.set_visible(False)
+                self.groups_preferences[index].group_expander_row.set_visible(True)
+                self.groups_preferences[index].groups_lights_expander_row.set_visible(True)
+
+            else :
+                self.groups_preferences[index].group_modify_action_row.set_visible(True)
+                self.groups_preferences[index].group_rename_action_row.set_visible(False)
+                self.groups_preferences[index].group_expander_row.set_visible(False)
+                self.groups_preferences[index].groups_lights_expander_row.set_visible(False)
 
     # GtkButton on click functions
     def on_add_group_button(self, widget, bridge, auth_handler, entry):
@@ -69,6 +119,7 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
         index = RESTUtilities.post_new_group(bridge, auth_handler, group_name)
         group = RESTUtilities.get_group(bridge, auth_handler, index)
         preference_group = GroupViewPreferenceGroup(bridge, auth_handler, group, index)
+        self.groups_preferences.append(preference_group)
         self.groups_preferences_page.add(preference_group)
         entry.set_text('')
 
@@ -102,14 +153,19 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
         preference_group = Handy.PreferencesGroup()
         preference_group.set_title('Luci')
         for light_id in lights :
-            row = LightExpanderRow(bridge, auth_handler, lights[light_id], light_id)
-            preference_group.add(row)
+            control_row = LightPreferencesRow(bridge, auth_handler, lights[light_id], light_id)
+            rename_row = RenameRowWidget(bridge, auth_handler, lights[light_id], light_id, control_row)
+            self.control_rows.append(control_row)
+            self.rename_rows.append(rename_row)
+            preference_group.add(control_row)
+            preference_group.add(rename_row)
         preference_group.show()
         self.lights_preference_page.add(preference_group)
 
     def update_groups_stack_view(self, groups, bridge, auth_handler):
         for index in groups:
             preference_group = GroupViewPreferenceGroup(bridge, auth_handler, groups[index], index)
+            self.groups_preferences.append(preference_group)
             self.groups_preferences_page.add(preference_group)
 
     def update_bridge_stack_view(self, config):

@@ -8,110 +8,26 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <template class="LightExpanderRow" parent="HdyExpanderRow">
+  <template class="LightPreferencesRow" parent="HdyPreferencesRow">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="show-enable-switch">True</property>
     <child>
-      <object class="HdyActionRow">
+      <object class="HdyExpanderRow" id="light_view_expander_row">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="title" translatable="yes">Luminosità</property>
+        <property name="show-enable-switch">True</property>
         <child>
-          <object class="GtkScale" id="light_brightness_scale">
+          <object class="HdyActionRow">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="adjustment">light_brightness_ad</property>
-            <property name="draw-value">False</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="HdyActionRow" id="light_modify_action_row">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="title" translatable="yes">Elimina/Rinomina dispositivo</property>
-        <child>
-          <object class="GtkButton" id="light_rename_button">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="receives-default">False</property>
-            <property name="halign">end</property>
-            <property name="valign">center</property>
-            <property name="margin-end">5</property>
+            <property name="title" translatable="yes">Luminosità</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkScale" id="light_brightness_scale">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="icon-name">document-edit-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="delete_light_button">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="receives-default">False</property>
-            <property name="halign">end</property>
-            <property name="valign">center</property>
-            <property name="margin-start">5</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">user-trash-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="HdyActionRow" id="light_rename_action_row">
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkEntry" id="light_rename_entry">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="valign">center</property>
-            <property name="hexpand">True</property>
-            <property name="placeholder-text" translatable="yes">Nome dispositivo</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="apply_light_rename_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="margin-end">5</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">document-edit-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="cancel_light_rename_button">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="halign">center</property>
-            <property name="valign">center</property>
-            <property name="margin-start">5</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">window-close-symbolic</property>
+                <property name="hexpand">True</property>
+                <property name="adjustment">light_brightness_ad</property>
+                <property name="draw-value">False</property>
               </object>
             </child>
           </object>
