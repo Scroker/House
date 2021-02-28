@@ -21,7 +21,7 @@ import platform
 gi.require_version('Handy', '1')
 
 from gi.repository import Gtk, Gio, Handy
-from .rest_utilities import RESTUtilities
+from .utilities import RESTUtilities
 from .model import Bridge
 from .model import AuthenticationHandler
 from .group_view import GroupViewPreferenceGroup
@@ -41,6 +41,8 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
     lights_preference_page = Gtk.Template.Child()
     connect_button = Gtk.Template.Child()
     press_button_label = Gtk.Template.Child()
+    name_new_group_entry = Gtk.Template.Child()
+    add_new_group_button = Gtk.Template.Child()
     settings = Gio.Settings.new('org.scroker.LightController')
 
     def __init__(self, **kwargs):
@@ -48,6 +50,7 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         self.connect_button.connect('clicked', self.on_connect_button, bridge)
+        self.add_new_group_button.connect('clicked', self.on_add_group_button, bridge, auth_handler, self.name_new_group_entry)
         self.squeezer.connect("notify::visible-child",self.on_headerbar_squeezer_notify)
         try:
             self.update_stack_view(bridge, auth_handler)
@@ -59,6 +62,15 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
     def on_headerbar_squeezer_notify(self, squeezer, event):
 	    child = squeezer.get_visible_child()
 	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
+
+    # GtkButton on click functions
+    def on_add_group_button(self, widget, bridge, auth_handler, entry):
+        group_name = entry.get_text()
+        index = RESTUtilities.post_new_group(bridge, auth_handler, group_name)
+        group = RESTUtilities.get_group(bridge, auth_handler, index)
+        preference_group = GroupViewPreferenceGroup(bridge, auth_handler, group, index)
+        self.groups_preferences_page.add(preference_group)
+        entry.set_text('')
 
     # GtkButton on click functions
     def on_connect_button(self, button, bridge):

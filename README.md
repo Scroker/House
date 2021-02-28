@@ -8,12 +8,13 @@ Features:
 - Brightness control on groups section
 - Simple On/Off on single group
 - Find and connect to the Hub Philips Hue
+- Add/rename/delete groups
 
-Todo:
+Todo Features:
 - Application icon required 
-- Change the name to lights and groups
-- Add lights and groups
-- Better organization of the project
+- Change the name to lights
+- Add lights to groups
+- Add add a new device
 
 # Screenshots
 ![LightController screenshot](https://github.com/Scroker/Photos/blob/main/LightControllerScreen/Schermata%20del%202021-02-27%2016-22-17.png)

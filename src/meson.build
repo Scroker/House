@@ -33,7 +33,7 @@ lightcontroller_sources = [
   'group_view.py',
   'light_view.py',
   'bridge_view.py',
-  'rest_utilities.py'
+  'utilities.py'
 ]
 
 install_data(lightcontroller_sources, install_dir: moduledir)

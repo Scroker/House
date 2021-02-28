@@ -2,7 +2,6 @@ import gi
 
 gi.require_version('Handy', '1')
 
-from .rest_utilities import RESTUtilities
 from gi.repository import Gtk, Handy
 
 @Gtk.Template(resource_path='/org/scroker/LightController/bridge_view.ui')

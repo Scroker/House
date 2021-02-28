@@ -70,7 +70,7 @@ class RESTUtilities(GObject.Object):
                 light = self.get_light(bridge, authentication_handler, light_id)
                 lights[light_id] = light
             group['lights'] = lights
-            return groups
+            return group
 
     @staticmethod
     def get_groups(bridge:Bridge, authentication_handler:AuthenticationHandler):
@@ -88,10 +88,9 @@ class RESTUtilities(GObject.Object):
             return groups
 
     @staticmethod
-    def post_new_group(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str=None, lights:list=None, sensors:list=None, group_type:str=None, group_class:str=None):
+    def post_new_group(bridge:Bridge, authentication_handler:AuthenticationHandler, name:str, lights:list=None, sensors:list=None, group_type:str="Room", group_class:str=None):
         request = {}
-        if name != None :
-            request["name"] = name
+        request["name"] = name
         if lights != None :
             request["lights"] = lights
         if sensors != None :
@@ -100,7 +99,7 @@ class RESTUtilities(GObject.Object):
             request["type"] = group_type
         if group_class != None :
             request["class"] = group_class
-        response = requests.post('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + index + '/state', json=request)
+        response = requests.post('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups', json=request)
         for set_group_response in response.json():
             if 'error' in set_group_response:
                 raise Exception(set_group_response['error'])
@@ -128,6 +127,30 @@ class RESTUtilities(GObject.Object):
                 return set_light_response['success']
 
     @staticmethod
+    def put_group_name(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str):
+        request = {}
+        request["name"] = name
+        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index, json=request)
+        print(response)
+        for set_group_response in response.json():
+            if 'error' in set_group_response:
+                raise Exception(set_group_response['error'])
+            if 'success' in set_group_response:
+                print(set_group_response['success'])
+
+    @staticmethod
+    def put_light_name(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str):
+        request = {}
+        request["name"] = name
+        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + index, json=request)
+        print(response)
+        for set_group_response in response.json():
+            if 'error' in set_group_response:
+                raise Exception(set_group_response['error'])
+            if 'success' in set_group_response:
+                print(set_group_response['success'])
+
+    @staticmethod
     def put_group_action(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, active:str=None, brightness:int=None, alert:str=None):
         request = {}
         if active != None :
@@ -143,3 +166,10 @@ class RESTUtilities(GObject.Object):
             if 'success' in set_group_response:
                 return set_group_response['success']
 
+    @staticmethod
+    def delete_group(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int):
+        response = requests.delete('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index)
+        delete_response = response.json()
+        print(delete_response)
+        if 'error' in delete_response:
+            raise Exception(groups['error'])
