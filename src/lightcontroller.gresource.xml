@@ -4,6 +4,7 @@
     <file>style.css</file>
     <file>group_view.ui</file>
     <file>light_view.ui</file>
+    <file>bridge_view.ui</file>
     <file>window.ui</file>
   </gresource>
 </gresources>

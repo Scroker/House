@@ -32,6 +32,7 @@ lightcontroller_sources = [
   'model.py',
   'group_view.py',
   'light_view.py',
+  'bridge_view.py',
   'rest_utilities.py'
 ]
 

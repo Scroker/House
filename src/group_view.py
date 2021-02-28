@@ -2,8 +2,8 @@ import gi
 
 gi.require_version('Handy', '1')
 
-from .rest_utilities import RESTUtilities
 from gi.repository import Gtk, Handy
+from .rest_utilities import RESTUtilities
 
 @Gtk.Template(resource_path='/org/scroker/LightController/group_view.ui')
 class GroupViewPreferenceGroup(Handy.PreferencesGroup):
@@ -14,7 +14,6 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
     group_expander_row = Gtk.Template.Child()
     group_light_scale = Gtk.Template.Child()
     group_light_adjustment = Gtk.Template.Child()
-    rest_utility = RESTUtilities()
 
     def __init__(self, bridge, auth_handler, group, index):
         super().__init__()
@@ -37,19 +36,19 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
             self.groups_lights_expander_row.add(row)
 
     def on_groups_light_scale_moved(self, widget, bridge, auth_handler, index):
-        self.rest_utility.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
+        RESTUtilities.put_group_action(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
     def on_groups_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
         if widget.get_enable_expansion():
-            self.rest_utility.put_group_action(bridge, auth_handler, index, active=True)
+            RESTUtilities.put_group_action(bridge, auth_handler, index, active=True)
         else :
-            self.rest_utility.put_group_action(bridge, auth_handler, index, active=False)
+            RESTUtilities.put_group_action(bridge, auth_handler, index, active=False)
 
     def on_light_switch_activated(self, widget, event, bridge, auth_handler, index):
         if widget.get_active():
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
+            RESTUtilities.put_light_status(bridge, auth_handler, index, active=True)
         else :
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
+            RESTUtilities.put_light_status(bridge, auth_handler, index, active=False)
 
 
   

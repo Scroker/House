@@ -26,6 +26,7 @@ from .model import Bridge
 from .model import AuthenticationHandler
 from .group_view import GroupViewPreferenceGroup
 from .light_view import LightExpanderRow
+from .bridge_view import BridgePreferenceGroup
 
 @Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
 class LightcontrollerWindow(Handy.ApplicationWindow):
@@ -40,7 +41,6 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
     lights_preference_page = Gtk.Template.Child()
     connect_button = Gtk.Template.Child()
     press_button_label = Gtk.Template.Child()
-    rest_utility = RESTUtilities()
     settings = Gio.Settings.new('org.scroker.LightController')
 
     def __init__(self, **kwargs):
@@ -62,10 +62,10 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
 
     # GtkButton on click functions
     def on_connect_button(self, button, bridge):
-        for bridge in self.rest_utility.discover_bridges():
+        for bridge in RESTUtilities.discover_bridges():
             try:
                 device_name = socket.gethostname() + "#" + platform.system()
-                auth_handler = self.rest_utility.pair_with_the_bridge(bridge, device_name)
+                auth_handler = RESTUtilities.pair_with_the_bridge(bridge, device_name)
                 self.update_stack_view(bridge, auth_handler)
                 self.settings.set_string('hue-hub-id', bridge.bridge_id)
                 self.settings.set_string('hue-hub-ip-address', bridge.internal_ip_address)
@@ -79,11 +79,11 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
 
     # GtkStackView update functions
     def update_stack_view(self, bridge, auth_handler):
-        config = self.rest_utility.get_config(bridge, auth_handler)
+        config = RESTUtilities.get_config(bridge, auth_handler)
         self.update_bridge_stack_view(config)
-        lights = self.rest_utility.get_lights(bridge, auth_handler)
+        lights = RESTUtilities.get_lights(bridge, auth_handler)
         self.update_light_stack_view(lights, bridge, auth_handler)
-        groups = self.rest_utility.get_groups(bridge, auth_handler)
+        groups = RESTUtilities.get_groups(bridge, auth_handler)
         self.update_groups_stack_view(groups, bridge, auth_handler)
 
     def update_light_stack_view(self, lights, bridge, auth_handler):
@@ -101,54 +101,7 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
             self.groups_preferences_page.add(preference_group)
 
     def update_bridge_stack_view(self, config):
-        preference_group = Handy.PreferencesGroup()
-        preference_group.set_title(config['name'])
-        bridgeid_label = Gtk.Label()
-        bridgeid_label.set_label(config['bridgeid'])
-        bridgeid_label.show()
-        bridgeid_row = Handy.ActionRow()
-        bridgeid_row.set_title('Bridge ID')
-        bridgeid_row.add(bridgeid_label)
-        bridgeid_row.show()
-        ipaddress_label = Gtk.Label()
-        ipaddress_label.set_label(config['ipaddress'])
-        ipaddress_label.show()
-        ipaddress_row = Handy.ActionRow()
-        ipaddress_row.set_title('Indirizzo IP')
-        ipaddress_row.add(ipaddress_label)
-        ipaddress_row.show()
-        mac_label = Gtk.Label()
-        mac_label.set_label(config['mac'])
-        mac_label.show()
-        mac_row = Handy.ActionRow()
-        mac_row.set_title('Indirizzo MAC')
-        mac_row.add(mac_label)
-        mac_row.show()
-        timezone_label = Gtk.Label()
-        timezone_label.set_label(config['timezone'])
-        timezone_label.show()
-        timezone_row = Handy.ActionRow()
-        timezone_row.set_title('Time Zone')
-        timezone_row.add(timezone_label)
-        timezone_row.show()
-        whitelist_row = Handy.ExpanderRow()
-        whitelist_row.set_title('White list')
-        whitelist_row.show()
-        for api_key in config['whitelist']:
-            api_label = Gtk.Label()
-            api_label.set_label(config['whitelist'][api_key]['last use date'])
-            api_label.show()
-            api_row = Handy.ActionRow()
-            api_row.set_title(config['whitelist'][api_key]['name'])
-            api_row.add(api_label)
-            api_row.show()
-            whitelist_row.add(api_row)
-        preference_group.add(ipaddress_row)
-        preference_group.add(mac_row)
-        preference_group.add(bridgeid_row)
-        preference_group.add(timezone_row)
-        preference_group.add(whitelist_row)
-        preference_group.show()
+        preference_group = BridgePreferenceGroup(config)
         self.bridge_preference_page.add(preference_group)
 
 

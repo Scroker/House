@@ -11,7 +11,6 @@ class LightExpanderRow(Handy.ExpanderRow):
 
     light_brightness_ad = Gtk.Template.Child()
     light_brightness_scale = Gtk.Template.Child()
-    rest_utility = RESTUtilities()
 
     def __init__(self, bridge, auth_handler, light, index):
         super().__init__()
@@ -23,11 +22,11 @@ class LightExpanderRow(Handy.ExpanderRow):
 
     # Light GtkScale on scale signal functions
     def on_light_scale_moved(self, widget, bridge, auth_handler, index):
-        self.rest_utility.put_light_status(bridge, auth_handler, index, brightness=int(widget.get_value()))
+        RESTUtilities.put_light_status(bridge, auth_handler, index, brightness=int(widget.get_value()))
 
     def on_light_expander_switch_activated(self, widget, event, bridge, auth_handler, index):
         if widget.get_enable_expansion():
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=True)
+            RESTUtilities.put_light_status(bridge, auth_handler, index, active=True)
         else :
-            self.rest_utility.put_light_status(bridge, auth_handler, index, active=False)
+            RESTUtilities.put_light_status(bridge, auth_handler, index, active=False)
 
