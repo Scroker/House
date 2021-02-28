@@ -60,7 +60,7 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
         if len(self.group_rename_entry.get_text()) > 4:
             self.group_modify_action_row.set_visible(True)
             self.set_title(self.group_rename_entry.get_text())
-            RESTUtilities.put_group_name(bridge, auth_handler, index, self.group_rename_entry.get_text())
+            RESTUtilities.put_group(bridge, auth_handler, index, self.group_rename_entry.get_text())
             self.group_rename_entry.set_text('')
             self.group_rename_action_row.set_visible(False)
 
