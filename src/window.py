@@ -25,6 +25,7 @@ from .utilities import RESTUtilities
 from .model import Bridge
 from .model import AuthenticationHandler
 from .group_view import GroupViewPreferenceGroup
+from .info_view import LightControllerAboutDialog
 from .light_view import LightPreferencesRow
 from .bridge_view import BridgePreferenceGroup
 from .rename_row import RenameRowWidget
@@ -59,21 +60,24 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         self.main_stack.connect("notify::visible-child", self.vc_changed)
-        self.header_bar_info_button.connect('clicked', self.hello_word)
+        self.header_bar_info_button.connect('clicked', self.on_info_button)
         self.connect_button.connect('clicked', self.on_connect_button, bridge)
         self.headerbar_add_button.connect('toggled', self.on_add_modifications, bridge)
         self.headerbar_enable_modification_button.connect('toggled', self.on_enable_modifications, bridge)
         self.add_new_group_button.connect('clicked', self.on_add_group_button, bridge, auth_handler, self.name_new_group_entry)
         self.squeezer.connect("notify::visible-child",self.on_headerbar_squeezer_notify)
+        deck = Handy.Deck()
+        deck.show()
+        self.add(deck)
         try:
             self.update_stack_view(bridge, auth_handler)
         except Exception as error:
             self.connect_button.set_sensitive(True)
             self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
-    def hello_word(self, widget):
-        print('Hello Word')
-
+    def on_info_button(self, widget):
+        about_dialog = LightControllerAboutDialog()
+        about_dialog.show()
 
     def vc_changed(self, widget, arg):
         if widget.get_visible_child_name() == 'lights' or widget.get_visible_child_name() == 'bridge':
@@ -106,7 +110,6 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
                 self.groups_preferences[index].group_rename_action_row.set_visible(False)
                 self.groups_preferences[index].group_expander_row.set_visible(True)
                 self.groups_preferences[index].groups_lights_expander_row.set_visible(True)
-
             else :
                 self.groups_preferences[index].group_modify_action_row.set_visible(True)
                 self.groups_preferences[index].group_rename_action_row.set_visible(False)
@@ -171,5 +174,4 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
     def update_bridge_stack_view(self, config):
         preference_group = BridgePreferenceGroup(config)
         self.bridge_preference_page.add(preference_group)
-
 

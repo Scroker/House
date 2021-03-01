@@ -33,6 +33,7 @@ lightcontroller_sources = [
   'widgets/group_view.py',
   'widgets/light_view.py',
   'widgets/bridge_view.py',
+  'widgets/info_view.py',
   'widgets/rename_row.py',
   'utilities.py'
 ]
