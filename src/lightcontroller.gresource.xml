@@ -6,6 +6,7 @@
     <file>widgets/light_view.ui</file>
     <file>widgets/bridge_view.ui</file>
     <file>widgets/info_view.ui</file>
+    <file>widgets/add_view.ui</file>
     <file>widgets/rename_row.ui</file>
     <file>window.ui</file>
   </gresource>

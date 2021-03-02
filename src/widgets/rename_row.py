@@ -9,42 +9,47 @@ from gi.repository import Gtk, Handy
 class RenameRowWidget(Handy.PreferencesRow):
     __gtype_name__ = 'RenameRowWidget'
 
+    light_rename_entry = Gtk.Template.Child()
     light_modify_action_row = Gtk.Template.Child()
     light_rename_action_row = Gtk.Template.Child()
-    apply_light_rename_button = Gtk.Template.Child()
-    cancel_light_rename_button = Gtk.Template.Child()
-    delete_light_button = Gtk.Template.Child()
-    light_rename_entry = Gtk.Template.Child()
-    light_rename_button = Gtk.Template.Child()
 
     def __init__(self, bridge, auth_handler, light, index, control_row):
         super().__init__()
-        self.apply_light_rename_button.connect('clicked', self.on_apply_rename_button, bridge, auth_handler, index, control_row)
-        self.cancel_light_rename_button.connect('clicked', self.on_cancel_rename_button)
         self.light_modify_action_row.set_title(light['name'])
-        self.delete_light_button.connect('clicked', self.on_delete_light_button, control_row)
-        self.light_rename_button.connect('clicked', self.on_light_rename_button)
+        self.control_row = control_row
+        self.index = index
+        self.bridge = bridge
+        self.auth_handler = auth_handler
+        self.light = light
 
-    def on_delete_light_button(self, widget, control_row):
-        control_row.destroy()
+    @Gtk.Template.Callback()
+    def on_light_rename_button(self, widget):
+        self.light_modify_action_row.set_visible(False)
+        self.light_rename_action_row.set_visible(True)
+
+    @Gtk.Template.Callback()
+    def on_light_delete_button(self, widget):
+        self.control_row.destroy()
         self.destroy()
 
+    @Gtk.Template.Callback()
     def on_cancel_rename_button(self, widget):
         self.light_modify_action_row.set_visible(True)
         self.light_rename_entry.set_text('')
         self.light_rename_action_row.set_visible(False)
 
-    def on_apply_rename_button(self, widget, bridge, auth_handler, index, control_row):
+    @Gtk.Template.Callback()
+    def on_apply_rename_button(self, widget):
         if len(self.light_rename_entry.get_text()) > 4:
             self.light_modify_action_row.set_visible(True)
             self.light_modify_action_row.set_title(self.light_rename_entry.get_text())
-            control_row.set_title(self.light_rename_entry.get_text())
-            RESTUtilities.put_light_name(bridge, auth_handler, index, self.light_rename_entry.get_text())
+            self.control_row.set_title(self.light_rename_entry.get_text())
+            try:
+                RESTUtilities.put_light_name(self.bridge, self.auth_handler, self.index, self.light_rename_entry.get_text())
+            except Exception:
+                print('Hello world')
             self.light_rename_entry.set_text('')
             self.light_rename_action_row.set_visible(False)
 
-    def on_light_rename_button(self, widget):
-        self.light_modify_action_row.set_visible(False)
-        self.light_rename_action_row.set_visible(True)
 
 

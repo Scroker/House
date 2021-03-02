@@ -162,6 +162,7 @@ class RESTUtilities(GObject.Object):
             request["bri"] = brightness
         if alert != None :
             request["alert"] = alert
+        print('Hello')
         response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index + '/action', json=request)
         for set_group_response in response.json():
             if 'error' in set_group_response:

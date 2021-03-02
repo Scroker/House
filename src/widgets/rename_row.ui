@@ -15,13 +15,14 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkButton" id="light_rename_button">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="receives-default">False</property>
                 <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="margin-end">5</property>
+                <signal name="clicked" handler="on_light_rename_button" swapped="no"/>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
@@ -32,13 +33,14 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="delete_light_button">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="receives-default">False</property>
                 <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="margin-start">5</property>
+                <signal name="clicked" handler="on_light_delete_button" swapped="no"/>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
@@ -69,30 +71,32 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="apply_light_rename_button">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="margin-end">5</property>
+                <signal name="clicked" handler="on_apply_rename_button" swapped="no"/>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">document-edit-symbolic</property>
+                    <property name="icon-name">emblem-ok-symbolic</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="cancel_light_rename_button">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="margin-start">5</property>
+                <signal name="clicked" handler="on_cancel_rename_button" swapped="no"/>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>

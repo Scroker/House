@@ -29,16 +29,16 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
         self.cancel_group_rename_button.connect('clicked', self.on_cancel_rename_button)
         self.group_delete_button.connect('clicked', self.on_delete_group_button, bridge, auth_handler, index)
         self.group_rename_button.connect('clicked', self.on_group_rename_button)
-        self.group_light_scale.connect("value-changed", self.on_groups_light_scale_moved, bridge, auth_handler, index)
         if 'bri' in group['action']:
             self.group_light_scale.set_value(group['action']['bri'])
-        self.group_expander_row.connect("notify::enable-expansion", self.on_groups_expander_switch_activated, bridge, auth_handler, index)
         self.group_expander_row.set_enable_expansion(group['action']['on'])
+        self.group_light_scale.connect("value-changed", self.on_groups_light_scale_moved, bridge, auth_handler, index)
+        self.group_expander_row.connect("notify::enable-expansion", self.on_groups_expander_switch_activated, bridge, auth_handler, index)
         lights = group['lights']
         for light_id in lights:
             switch = Gtk.Switch()
-            switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, light_id)
             switch.set_active(lights[light_id]['state']['on'])
+            switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, light_id)
             switch.set_valign(Gtk.Align.CENTER)
             switch.show()
             row = Handy.ActionRow()
