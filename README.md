@@ -1,4 +1,4 @@
-# LightController
+# GnomeHouse
 
 A simple GTK application project to control Philiphs Hue Hub
 
