@@ -31,7 +31,8 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/gdramis/Progetti"
+                    "url" : "https://github.com/Scroker/gnome-house",
+		    "tag" : "0.1.1"
                 }
             ]
         }

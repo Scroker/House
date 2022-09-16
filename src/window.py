@@ -37,13 +37,12 @@ class House(Adw.ApplicationWindow):
     control_rows = []
     groups_preferences = []
     main_stack = Gtk.Template.Child()
-    #connect_button = Gtk.Template.Child()
-    bottom_switcher = Gtk.Template.Child()
-    #press_button_label = Gtk.Template.Child()
+    connect_button = Gtk.Template.Child()
+    press_button_label = Gtk.Template.Child()
     headerbar_switcher = Gtk.Template.Child()
     headerbar_add_button = Gtk.Template.Child()
     lights_preference_page = Gtk.Template.Child()
-    #bridge_preference_page = Gtk.Template.Child()
+    bridge_preference_page = Gtk.Template.Child()
     #headerbar_info_button = Gtk.Template.Child()
     groups_preferences_page = Gtk.Template.Child()
     headerbar_enable_modification_button = Gtk.Template.Child()
@@ -55,10 +54,10 @@ class House(Adw.ApplicationWindow):
         self.auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         self.add_group_preference_group = AddPreferenceGroup(self.bridge, self.auth_handler)
         #self.groups_preferences_page.add(self.add_group_preference_group)
-        #try:
-        #self.update_stack_view()
-        #except Exception as error:
-            #self.connect_button.set_sensitive(True)
+        try:
+            self.update_stack_view()
+        except Exception as error:
+            self.connect_button.set_sensitive(True)
             #self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
     # GtkStackView update functions

@@ -6,9 +6,9 @@
   <template class="House" parent="AdwApplicationWindow">
     <property name="width-request">350</property>
     <property name="height-request">600</property>
-    <property name="can-focus">False</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -23,7 +23,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="homogeneous">True</property>
-                <signal name="notify::visible-child" handler="on_headerbar_squeezer_notify" swapped="no"/>
                 <child>
                   <object class="AdwViewSwitcherTitle" id="headerbar_switcher">
                     <property name="width-request">300</property>
@@ -33,14 +32,11 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="name">title_label</property>
+                  <object class="AdwWindowTitle">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label">Light Controller</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
+                    <property name="title">House</property>
+                    <property name="subtitle">Home's lights controller</property>
                   </object>
                 </child>
               </object>
@@ -81,11 +77,12 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="vexpand">True</property>
-            <signal name="notify::move-focus" handler="on_stack_change" swapped="no"/>
+            <signal name="notify::visible-child" handler="on_stack_change" swapped="no"/>
             <child>
               <object class="AdwViewStackPage" id="lights_preference_page">
                 <property name="name">lights</property>
                 <property name="title">Lights</property>
+                <property name="icon-name">dialog-information-symbolic</property>
                 <property name="child">
                   <object class="AdwStatusPage">
                     <property name="title">Lights Page</property>
@@ -97,6 +94,7 @@
               <object class="AdwViewStackPage" id="groups_preferences_page">
                 <property name="name">groups</property>
                 <property name="title">Groups</property>
+                <property name="icon-name">user-home-symbolic</property>
                 <property name="child">
                   <object class="AdwStatusPage">
                     <property name="title">Groups Page</property>
@@ -108,9 +106,26 @@
               <object class="AdwViewStackPage" id="bridge_preference_page">
                 <property name="name">bridges</property>
                 <property name="title">Bridges</property>
+                <property name="icon-name">preferences-desktop-display-symbolic</property>
                 <property name="child">
                   <object class="AdwStatusPage">
                     <property name="title">Bridges Page</property>
+                    <child>
+                      <object class="GtkLabel" id="press_button_label">
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Press Hub Button</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="connect_button">
+                        <property name="label" translatable="yes">Trova un Bridge</property>
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <signal name="clicked" handler="on_connect_button" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </property>
               </object>
