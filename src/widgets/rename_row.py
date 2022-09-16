@@ -1,12 +1,12 @@
 import gi
 
-gi.require_version('Handy', '1')
+gi.require_version('Adw', '1')
 
 from .utilities import RESTUtilities
-from gi.repository import Gtk, Handy
+from gi.repository import Gtk, Adw
 
-@Gtk.Template(resource_path='/org/scroker/LightController/widgets/rename_row.ui')
-class RenameRowWidget(Handy.PreferencesRow):
+@Gtk.Template(resource_path='/org/gnome/House/widgets/rename_row.ui')
+class RenameRowWidget(Adw.PreferencesRow):
     __gtype_name__ = 'RenameRowWidget'
 
     light_rename_entry = Gtk.Template.Child()
@@ -50,6 +50,7 @@ class RenameRowWidget(Handy.PreferencesRow):
                 print('Hello world')
             self.light_rename_entry.set_text('')
             self.light_rename_action_row.set_visible(False)
+
 
 
 

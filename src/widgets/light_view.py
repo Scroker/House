@@ -1,12 +1,12 @@
 import gi
 
-gi.require_version('Handy', '1')
+gi.require_version('Adw', '1')
 
 from .utilities import RESTUtilities
-from gi.repository import Gtk, Handy
+from gi.repository import Gtk, Adw
 
-@Gtk.Template(resource_path='/org/scroker/LightController/widgets/light_view.ui')
-class LightPreferencesRow(Handy.PreferencesRow):
+@Gtk.Template(resource_path='/org/gnome/House/widgets/light_view.ui')
+class LightPreferencesRow(Adw.PreferencesRow):
     __gtype_name__ = 'LightPreferencesRow'
 
     light_view_expander_row = Gtk.Template.Child()
@@ -30,4 +30,6 @@ class LightPreferencesRow(Handy.PreferencesRow):
             RESTUtilities.put_light_status(bridge, auth_handler, index, active=True)
         else :
             RESTUtilities.put_light_status(bridge, auth_handler, index, active=False)
+
+
 

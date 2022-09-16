@@ -1,12 +1,12 @@
 import gi
 
-gi.require_version('Handy', '1')
+gi.require_version('Adw', '1')
 
 from .utilities import RESTUtilities
-from gi.repository import Gtk, Handy
+from gi.repository import Gtk, Adw
 
-@Gtk.Template(resource_path='/org/scroker/LightController/widgets/add_view.ui')
-class AddPreferenceGroup(Handy.PreferencesGroup):
+@Gtk.Template(resource_path='/org/gnome/House/widgets/add_view.ui')
+class AddPreferenceGroup(Adw.PreferencesGroup):
     __gtype_name__ = 'AddPreferenceGroup'
 
     new_group_name_entry = Gtk.Template.Child()

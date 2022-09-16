@@ -18,31 +18,33 @@
 import sys
 import gi
 
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Gdk, Gio
+from gi.repository import Gtk, Gdk, Gio, Adw
 
-from .window import LightcontrollerWindow
+from .window import House
 
 
-class Application(Gtk.Application):
+class Application(Adw.Application):
     def __init__(self):
-        super().__init__(application_id='org.scroker.LightController',
+        super().__init__(application_id='org.gnome.House',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
-        style_provider = Gtk.CssProvider()
-        style_provider.load_from_resource('/org/scroker/LightController/widgets/style.css')
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(),
-            style_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        #style_provider = Gtk.CssProvider()
+        #style_provider.load_from_resource('/org/gnome/House/widgets/style.css')
+        #Gtk.StyleContext.add_provider_for_screen(
+        #    Gdk.Screen.get_default(),
+        #    style_provider,
+        #    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        #)
         win = self.props.active_window
         if not win:
-            win = LightcontrollerWindow(application=self)
+            win = House(application=self)
         win.present()
 
 def main(version):
     app = Application()
     return app.run(sys.argv)
+

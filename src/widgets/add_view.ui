@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
-  <requires lib="libhandy" version="0.0"/>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
   <object class="GtkEntryBuffer" id="new_group_name_buffer"/>
-  <template class="AddPreferenceGroup" parent="HdyPreferencesGroup">
+  <template class="AddPreferenceGroup" parent="AdwPreferencesGroup">
     <property name="can-focus">False</property>
     <child>
-      <object class="HdyPreferencesRow">
+      <object class="AdwPreferencesRow">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="HdyActionRow">
+          <object class="AdwActionRow">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
@@ -47,3 +47,4 @@
     </child>
   </template>
 </interface>
+

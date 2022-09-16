@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="lightcontroller">
-	<schema id="org.scroker.LightController" path="/org/scroker/LightController/">
+<schemalist gettext-domain="gnome_house">
+	<schema id="org.gnome.House" path="/org/gnome/House/">
 	  <key type="s" name="hue-hub-id">
       <default>""</default>
       <summary>Device API ip address</summary>

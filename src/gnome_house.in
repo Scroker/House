@@ -1,8 +1,8 @@
 #!@PYTHON@
 
-# lightcontroller.in
+# gnome_house.in
 #
-# Copyright 2021 Giorgio Dramis
+# Copyright 2022 Giorgio Dramis
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,10 +16,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
 import sys
 import signal
+import locale
 import gettext
 
 VERSION = '@VERSION@'
@@ -28,14 +31,16 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-gettext.install('lightcontroller', localedir)
+locale.bindtextdomain('gnome_house', localedir)
+locale.textdomain('gnome_house')
+gettext.install('gnome_house', localedir)
 
 if __name__ == '__main__':
     import gi
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'lightcontroller.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'gnome_house.gresource'))
     resource._register()
 
-    from lightcontroller import main
+    from gnome_house import main
     sys.exit(main.main(VERSION))

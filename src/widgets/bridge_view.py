@@ -1,11 +1,11 @@
 import gi
 
-gi.require_version('Handy', '1')
+gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Handy
+from gi.repository import Gtk, Adw
 
-@Gtk.Template(resource_path='/org/scroker/LightController/widgets/bridge_view.ui')
-class BridgePreferenceGroup(Handy.PreferencesGroup):
+@Gtk.Template(resource_path='/org/gnome/House/widgets/bridge_view.ui')
+class BridgePreferenceGroup(Adw.PreferencesGroup):
     __gtype_name__ = 'BridgePreferenceGroup'
 
     bridge_ip_address = Gtk.Template.Child()
@@ -25,8 +25,9 @@ class BridgePreferenceGroup(Handy.PreferencesGroup):
             label = Gtk.Label()
             label.set_label(config['whitelist'][api_key]['last use date'])
             label.show()
-            row = Handy.ActionRow()
+            row = Adw.ActionRow()
             row.set_title(config['whitelist'][api_key]['name'])
             row.add(label)
             row.show()
             self.groups_lights_expander_row.add(row)
+

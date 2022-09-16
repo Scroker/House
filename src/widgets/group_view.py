@@ -1,12 +1,12 @@
 import gi
 
-gi.require_version('Handy', '1')
+gi.require_version('Adw', '1')
 
-from gi.repository import Gtk, Handy
+from gi.repository import Gtk, Adw
 from .utilities import RESTUtilities
 
-@Gtk.Template(resource_path='/org/scroker/LightController/widgets/group_view.ui')
-class GroupViewPreferenceGroup(Handy.PreferencesGroup):
+@Gtk.Template(resource_path='/org/gnome/House/widgets/group_view.ui')
+class GroupViewPreferenceGroup(Adw.PreferencesGroup):
     __gtype_name__ = 'GroupViewPreferenceGroup'
 
     groups_lights_expander_row = Gtk.Template.Child()
@@ -41,7 +41,7 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
             switch.connect("notify::active", self.on_light_switch_activated, bridge, auth_handler, light_id)
             switch.set_valign(Gtk.Align.CENTER)
             switch.show()
-            row = Handy.ActionRow()
+            row = Adw.ActionRow()
             row.set_title(lights[light_id]['name'])
             row.add(switch)
             row.show()
@@ -86,3 +86,4 @@ class GroupViewPreferenceGroup(Handy.PreferencesGroup):
 
 
   
+

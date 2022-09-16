@@ -1,41 +1,39 @@
 desktop_file = i18n.merge_file(
-  input: 'org.scroker.LightController.desktop.in',
-  output: 'org.scroker.LightController.desktop',
-  type: 'desktop',
-  po_dir: '../po',
-  install: true,
+        input: 'org.gnome.House.desktop.in',
+       output: 'org.gnome.House.desktop',
+         type: 'desktop',
+       po_dir: '../po',
+      install: true,
   install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
-  test('Validate desktop file', desktop_utils,
-    args: [desktop_file]
-  )
+  test('Validate desktop file', desktop_utils, args: [desktop_file])
 endif
 
 appstream_file = i18n.merge_file(
-  input: 'org.scroker.LightController.appdata.xml.in',
-  output: 'org.scroker.LightController.appdata.xml',
-  po_dir: '../po',
-  install: true,
+        input: 'org.gnome.House.appdata.xml.in',
+       output: 'org.gnome.House.appdata.xml',
+       po_dir: '../po',
+      install: true,
   install_dir: join_paths(get_option('datadir'), 'appdata')
 )
 
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
-  test('Validate appstream file', appstream_util,
-    args: ['validate', appstream_file]
-  )
+  test('Validate appstream file', appstream_util, args: ['validate', appstream_file])
 endif
 
-install_data('org.scroker.LightController.gschema.xml',
+install_data('org.gnome.House.gschema.xml',
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
 
 compile_schemas = find_program('glib-compile-schemas', required: false)
 if compile_schemas.found()
-  test('Validate schema file', compile_schemas,
-    args: ['--strict', '--dry-run', meson.current_source_dir()]
-  )
+  test('Validate schema file',
+       compile_schemas,
+       args: ['--strict', '--dry-run', meson.current_source_dir()])
 endif
+
+subdir('icons')

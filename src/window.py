@@ -18,9 +18,7 @@ import gi
 import socket
 import platform
 
-gi.require_version('Handy', '1')
-
-from gi.repository import Gtk, Gio, Handy
+from gi.repository import Gtk, Gio, Adw
 from .utilities import RESTUtilities
 from .model import Bridge
 from .model import AuthenticationHandler
@@ -31,38 +29,37 @@ from .light_view import LightPreferencesRow
 from .bridge_view import BridgePreferenceGroup
 from .rename_row import RenameRowWidget
 
-@Gtk.Template(resource_path='/org/scroker/LightController/window.ui')
-class LightcontrollerWindow(Handy.ApplicationWindow):
-    __gtype_name__ = 'LightcontrollerWindow'
+@Gtk.Template(resource_path='/org/gnome/House/window.ui')
+class House(Adw.ApplicationWindow):
+    __gtype_name__ = 'House'
 
     rename_rows = []
     control_rows = []
     groups_preferences = []
     main_stack = Gtk.Template.Child()
-    connect_button = Gtk.Template.Child()
+    #connect_button = Gtk.Template.Child()
     bottom_switcher = Gtk.Template.Child()
-    press_button_label = Gtk.Template.Child()
+    #press_button_label = Gtk.Template.Child()
     headerbar_switcher = Gtk.Template.Child()
     headerbar_add_button = Gtk.Template.Child()
     lights_preference_page = Gtk.Template.Child()
-    bridge_preference_page = Gtk.Template.Child()
-    headerbar_info_button = Gtk.Template.Child()
+    #bridge_preference_page = Gtk.Template.Child()
+    #headerbar_info_button = Gtk.Template.Child()
     groups_preferences_page = Gtk.Template.Child()
     headerbar_enable_modification_button = Gtk.Template.Child()
-    settings = Gio.Settings.new('org.scroker.LightController')
+    settings = Gio.Settings.new('org.gnome.House')
 
     def __init__(self, **kwargs):
-        Handy.init()
         super().__init__(**kwargs)
         self.bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         self.auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         self.add_group_preference_group = AddPreferenceGroup(self.bridge, self.auth_handler)
-        self.groups_preferences_page.add(self.add_group_preference_group)
-        try:
-            self.update_stack_view()
-        except Exception as error:
-            self.connect_button.set_sensitive(True)
-            self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
+        #self.groups_preferences_page.add(self.add_group_preference_group)
+        #try:
+        #self.update_stack_view()
+        #except Exception as error:
+            #self.connect_button.set_sensitive(True)
+            #self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
     # GtkStackView update functions
     def update_stack_view(self):
@@ -96,10 +93,10 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
         preference_group = BridgePreferenceGroup(config)
         self.bridge_preference_page.add(preference_group)
 
-    @Gtk.Template.Callback()
-    def on_info_button(self, widget):
-        about_dialog = LightControllerAboutDialog()
-        about_dialog.show()
+    #@Gtk.Template.Callback()
+    #def on_info_button(self, widget):
+    #    about_dialog = LightControllerAboutDialog()
+    #    about_dialog.show()
 
     @Gtk.Template.Callback()
     def on_stack_change(self, widget, arg):
@@ -107,11 +104,6 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
             self.headerbar_add_button.set_visible(False)
         else :
             self.headerbar_add_button.set_visible(True)
-
-    @Gtk.Template.Callback()
-    def on_headerbar_squeezer_notify(self, squeezer, event):
-	    child = squeezer.get_visible_child()
-	    self.bottom_switcher.set_reveal(child != self.headerbar_switcher)
 
     @Gtk.Template.Callback()
     def on_add_modifications(self, widget):
@@ -151,7 +143,7 @@ class LightcontrollerWindow(Handy.ApplicationWindow):
                 self.settings.set_string('hue-hub-id', bridge.bridge_id)
                 self.settings.set_string('hue-hub-ip-address', bridge.internal_ip_address)
                 self.settings.set_string('hue-hub-user-name', auth_handler.user_name)
-                self.connect_button.set_sensitive(False)
+                #self.connect_button.set_sensitive(False)
                 self.press_button_label.set_visible(False)
                 break
             except Exception as error:

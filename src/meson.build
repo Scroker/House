@@ -1,9 +1,9 @@
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'lightcontroller')
+moduledir = join_paths(pkgdatadir, 'gnome_house')
 gnome = import('gnome')
 
-gnome.compile_resources('lightcontroller',
-  'lightcontroller.gresource.xml',
+gnome.compile_resources('gnome_house',
+  'gnome_house.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -18,14 +18,14 @@ conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'lightcontroller.in',
-  output: 'lightcontroller',
+  input: 'gnome_house.in',
+  output: 'gnome_house',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir')
 )
 
-lightcontroller_sources = [
+gnome_house_sources = [
   '__init__.py',
   'main.py',
   'window.py',
@@ -39,4 +39,4 @@ lightcontroller_sources = [
   'utilities.py'
 ]
 
-install_data(lightcontroller_sources, install_dir: moduledir)
+install_data(gnome_house_sources, install_dir: moduledir)

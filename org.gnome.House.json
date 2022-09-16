@@ -1,13 +1,14 @@
 {
-    "app-id" : "org.scroker.LightController",
+    "app-id" : "org.gnome.House",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.38",
+    "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
-    "command" : "lightcontroller",
+    "command" : "gnome_house",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
+        "--device=dri",
         "--socket=wayland"
     ],
     "cleanup" : [
@@ -23,35 +24,14 @@
     ],
     "modules" : [
     	"python3-requests.json",
-    	{
-	    "name" : "libhandy",
-	    "buildsystem" : "meson",
-	    "config-opts" : [
-		"-Dprofiling=false",
-		"-Dintrospection=enabled",
-		"-Dgtk_doc=false",
-		"-Dtests=false",
-		"-Dexamples=false",
-		"-Dvapi=false",
-		"-Dglade_catalog=disabled"
-	    ],
-	    "sources" : [
-		{
-		    "type" : "git",
-		    "url" : "https://gitlab.gnome.org/GNOME/libhandy",
-		    "tag" : "1.0.3"
-		}
-	    ]
-	},
-	{
-            "name" : "lightcontroller",
+        {
+            "name" : "gnome_house",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://github.com/Scroker/LightController",
-		    "tag" : "0.1.1"
+                    "url" : "file:///home/gdramis/Progetti"
                 }
             ]
         }

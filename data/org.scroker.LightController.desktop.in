@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=lightcontroller
-Exec=lightcontroller
-Terminal=false
-Type=Application
-Categories=GTK;
-StartupNotify=true

@@ -1,1 +1,1 @@
-i18n.gettext('lightcontroller', preset: 'glib')
+i18n.gettext('gnome_house', preset: 'glib')

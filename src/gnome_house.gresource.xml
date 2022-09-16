@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/scroker/LightController">
+  <gresource prefix="/org/gnome/House">
     <file>widgets/style.css</file>
     <file>widgets/group_view.ui</file>
     <file>widgets/light_view.ui</file>
@@ -11,3 +11,4 @@
     <file>window.ui</file>
   </gresource>
 </gresources>
+

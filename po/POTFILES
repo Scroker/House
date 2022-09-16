@@ -1,7 +1,6 @@
-data/org.scroker.LightController.desktop.in
-data/org.scroker.LightController.appdata.xml.in
-data/org.scroker.LightController.gschema.xml
-src/window.ui
+data/org.gnome.House.desktop.in
+data/org.gnome.House.appdata.xml.in
+data/org.gnome.House.gschema.xml
 src/main.py
 src/window.py
-
+src/window.ui
