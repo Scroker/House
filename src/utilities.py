@@ -3,6 +3,7 @@ import sys
 import requests
 
 from gi.repository import GObject
+from .model import PhilipsHueListener
 from .model import Bridge
 from .model import AuthenticationHandler
 
@@ -15,10 +16,10 @@ class RESTUtilities(GObject.Object):
     @staticmethod
     def discover_bridges():
         bridges = []
-        response = requests.get('https://discovery.meethue.com/')
-        for bridge_info in response.json():
-            bridge = Bridge(bridge_info['id'], bridge_info['internalipaddress'])
-            bridges.append(bridge)
+        listener = PhilipsHueListener()
+        bridge_info = listener.get_ip_addresses()
+        bridge = Bridge(listener.name, bridge_info[0])
+        bridges.append(bridge)
         return bridges
 
     @staticmethod

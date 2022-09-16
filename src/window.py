@@ -53,12 +53,11 @@ class House(Adw.ApplicationWindow):
         self.bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         self.auth_handler = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         self.add_group_preference_group = AddPreferenceGroup(self.bridge, self.auth_handler)
-        #self.groups_preferences_page.add(self.add_group_preference_group)
+        self.groups_preferences_page.add(self.add_group_preference_group)
         try:
             self.update_stack_view()
         except Exception as error:
             self.connect_button.set_sensitive(True)
-            #self.connect_button.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
 
     # GtkStackView update functions
     def update_stack_view(self):
@@ -133,19 +132,23 @@ class House(Adw.ApplicationWindow):
                 self.groups_preferences[index].groups_lights_expander_row.set_visible(False)
 
     @Gtk.Template.Callback()
-    def on_connect_button(self):
+    def on_connect_button(self, widget):
         for bridge in RESTUtilities.discover_bridges():
             try:
                 device_name = socket.gethostname() + "#" + platform.system()
+                print(device_name)
                 auth_handler = RESTUtilities.pair_with_the_bridge(bridge, device_name)
-                self.update_stack_view(bridge, auth_handler)
+                print(auth_handler.user_name)
+                #self.update_stack_view(bridge, auth_handler)
                 self.settings.set_string('hue-hub-id', bridge.bridge_id)
                 self.settings.set_string('hue-hub-ip-address', bridge.internal_ip_address)
                 self.settings.set_string('hue-hub-user-name', auth_handler.user_name)
-                #self.connect_button.set_sensitive(False)
+                self.connect_button.set_sensitive(False)
                 self.press_button_label.set_visible(False)
+                print("Label Hidden")
                 break
             except Exception as error:
                 if '\'type\': 101' in str(error) :
                     self.press_button_label.set_visible(True)
+
 

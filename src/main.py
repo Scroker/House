@@ -22,9 +22,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
 from gi.repository import Gtk, Gdk, Gio, Adw
-
 from .window import House
-
 
 class Application(Adw.Application):
     def __init__(self):

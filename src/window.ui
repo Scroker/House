@@ -79,25 +79,27 @@
             <property name="vexpand">True</property>
             <signal name="notify::visible-child" handler="on_stack_change" swapped="no"/>
             <child>
-              <object class="AdwViewStackPage" id="lights_preference_page">
+              <object class="AdwViewStackPage">
                 <property name="name">lights</property>
                 <property name="title">Lights</property>
                 <property name="icon-name">dialog-information-symbolic</property>
                 <property name="child">
-                  <object class="AdwStatusPage">
-                    <property name="title">Lights Page</property>
+                   <object class="AdwPreferencesPage" id="lights_preference_page">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                   </object>
                 </property>
               </object>
             </child>
             <child>
-              <object class="AdwViewStackPage" id="groups_preferences_page">
+              <object class="AdwViewStackPage">
                 <property name="name">groups</property>
                 <property name="title">Groups</property>
                 <property name="icon-name">user-home-symbolic</property>
                 <property name="child">
-                  <object class="AdwStatusPage">
-                    <property name="title">Groups Page</property>
+                  <object class="AdwPreferencesPage" id="groups_preferences_page">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
                   </object>
                 </property>
               </object>
@@ -111,19 +113,27 @@
                   <object class="AdwStatusPage">
                     <property name="title">Bridges Page</property>
                     <child>
-                      <object class="GtkLabel" id="press_button_label">
-                        <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Press Hub Button</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="connect_button">
-                        <property name="label" translatable="yes">Trova un Bridge</property>
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can-focus">True</property>
-                        <property name="receives-default">True</property>
-                        <signal name="clicked" handler="on_connect_button" swapped="no"/>
+                      <object class="GtkBox">
+                      <property name="visible">True</property>
+                      <property name="can-focus">False</property>
+                      <property name="orientation">vertical</property>
+                      <child>
+                        <object class="GtkButton" id="connect_button">
+                          <property name="label" translatable="yes">Trova un Bridge</property>
+                          <property name="visible">True</property>
+                          <property name="sensitive">False</property>
+                          <property name="can-focus">True</property>
+                          <property name="receives-default">True</property>
+                          <signal name="clicked" handler="on_connect_button" swapped="no"/>
+                        </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="press_button_label">
+                            <property name="visible">False</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Press Hub Button</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

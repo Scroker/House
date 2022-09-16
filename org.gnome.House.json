@@ -24,7 +24,8 @@
     ],
     "modules" : [
     	"python3-requests.json",
-        {
+    	"python3-zeroconf.json",
+    	{
             "name" : "gnome_house",
             "builddir" : true,
             "buildsystem" : "meson",
