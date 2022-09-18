@@ -19,13 +19,25 @@ import socket
 import platform
 
 from gi.repository import Gtk, Gio, Adw
+from .widgets import LightActionRow, GroupActionRow, BridgeActionRow, LightPage
 
 @Gtk.Template(resource_path='/org/gnome/House/window.ui')
 class House(Adw.ApplicationWindow):
     __gtype_name__ = 'House'
-
+    leaflet = Gtk.Template.Child()
+    lafleat_page_two = Gtk.Template.Child()
     settings = Gio.Settings.new('org.gnome.House')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        light_page = LightPage()
+        self.lafleat_page_two.append(light_page)
+        self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
 
+    #@Gtk.Template.Callback()
+    def on_leaflet_back(self, widget):
+        print("Leaflet Back")
+
+    #@Gtk.Template.Callback()
+    def on_switch_activate(self, widget):
+        print("Switch Activate")

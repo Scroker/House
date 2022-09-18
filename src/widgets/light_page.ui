@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <object class="GtkAdjustment" id="light_brightness_ad">
+    <property name="upper">254</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <template class="LightPage" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="valign">center</property>
+    <child>
+      <object class="GtkBox" id="name">
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="label">Ligth One</property>
+            <property name="margin-start">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-bottom">20</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="hexpand">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label">Modifica Nome</property>
+            <property name="margin-start">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-bottom">20</property>
+            <signal name="clicked" handler="on_modify_name_click" swapped="no"/>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="luminosity">
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="label">Brightness</property>
+            <property name="margin-start">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-bottom">20</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="hexpand">True</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScale" id="light_brightness_scale">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="width-request">250</property>
+            <property name="adjustment">light_brightness_ad</property>
+            <property name="draw-value">False</property>
+            <property name="margin-start">20</property>
+            <property name="margin-top">20</property>
+            <property name="margin-end">20</property>
+            <property name="margin-bottom">20</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

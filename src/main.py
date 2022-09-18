@@ -30,13 +30,6 @@ class Application(Adw.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
-        #style_provider = Gtk.CssProvider()
-        #style_provider.load_from_resource('/org/gnome/House/widgets/style.css')
-        #Gtk.StyleContext.add_provider_for_screen(
-        #    Gdk.Screen.get_default(),
-        #    style_provider,
-        #    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        #)
         win = self.props.active_window
         if not win:
             win = House(application=self)

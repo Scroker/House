@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/House">
-    <file>widgets/style.css</file>
-    <file>widgets/group_view.ui</file>
-    <file>widgets/light_view.ui</file>
-    <file>widgets/bridge_view.ui</file>
-    <file>widgets/info_view.ui</file>
-    <file>widgets/rename_row.ui</file>
+    <file>widgets/light_action_row.ui</file>
+    <file>widgets/group_action_row.ui</file>
+    <file>widgets/bridge_action_row.ui</file>
+    <file>widgets/light_page.ui</file>
     <file>window.ui</file>
   </gresource>
 </gresources>

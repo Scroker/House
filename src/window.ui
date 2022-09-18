@@ -2,31 +2,6 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
-  <object class="GtkAdjustment" id="light_brightness_ad">
-    <property name="upper">254</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
-  </object>
-  <object class="GtkPopover" id="main_menu">
-    <property name="can-focus">False</property>
-    <child>
-      <object class="GtkModelButton" id="headerbar_info_button">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">True</property>
-        <!--
-        <property name="margin-left">5</property>
-        <property name="margin-right">5</property>
-        <property name="margin-start">5</property>
-        <property name="margin-end">5</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
-        -->
-        <property name="text" translatable="yes">Informazioni</property>
-        <signal name="clicked" handler="on_info_button" swapped="no"/>
-      </object>
-    </child>
-  </object>
   <template class="House" parent="AdwApplicationWindow">
     <property name="default-width">1200</property>
     <property name="default-height">800</property>
@@ -35,12 +10,10 @@
         <property name="can-navigate-back">True</property>
         <property name="hexpand">True</property>
         <child>
-
-          <!-- First Lafleat Page -->
-          <object class="GtkBox">
+          <!-- Start Lafleat Page 1 -->
+          <object class="GtkBox" id="leaflet_page_one">
             <property name="orientation">vertical</property>
-
-            <!-- Header Bar -->
+            <!-- Start Header Bar -->
             <child>
               <object class="AdwHeaderBar">
                 <binding name="show-end-title-buttons">
@@ -48,145 +21,100 @@
                 </binding>
                 <child type="title">
                   <object class="AdwSqueezer" id="squeezer">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="AdwViewSwitcherTitle" id="headerbar_switcher">
-                        <property name="width-request">300</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
+                        <property name="width-request">305</property>
                         <property name="stack">main_stack</property>
                       </object>
                     </child>
                     <child>
                       <object class="AdwWindowTitle">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
                         <property name="title">House</property>
                         <property name="subtitle">Home's lights controller</property>
                       </object>
                     </child>
                   </object>
                 </child>
-                <child type="end">
-                  <object class="GtkMenuButton" id="headerbar_menu_button">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <!-- <property name="is-focus">True</property> -->
-                    <property name="receives-default">False</property>
-                    <property name="popover">main_menu</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="icon-name">open-menu-symbolic</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
               </object>
             </child>
-
-            <!-- View Stack -->
+            <!-- End Header Bar -->
+            <!-- Start View Stack -->
             <child>
               <object class="AdwViewStack" id="main_stack">
                 <property name="height-request">400</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="vexpand">True</property>
-
-                <!-- Lights Page -->
+                <!-- Start Lights Page -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">lights</property>
                     <property name="title">Lights</property>
                     <property name="icon-name">dialog-information-symbolic</property>
                     <property name="child">
-                      <object class="GtkListBox">
+                      <object class="GtkListBox" id="light_box">
                         <property name="selection-mode">single</property>
                         <property name="margin-top">24</property>
                         <property name="margin-bottom">24</property>
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>
-
-                        <child>
-                          <object class="AdwActionRow">
-                            <property name="title">Light One</property>
-                            <property name="subtitle">Kitchen</property>
-                            <child>
-                              <object class="GtkSwitch">
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
-                        <child>
-                          <object class="AdwActionRow">
-                            <property name="title">Light Two</property>
-                            <property name="subtitle">Badroom</property>
-                            <child>
-                              <object class="GtkSwitch">
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-
                       </object>
                     </property>
                   </object>
                 </child>
-
-                <!-- Rooms Page -->
+                <!-- End Lights Page -->
+                <!-- Start Rooms Page -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">rooms</property>
                     <property name="title">Rooms</property>
                     <property name="icon-name">user-home-symbolic</property>
                     <property name="child">
-                      <object class="AdwStatusPage">
-                        <property name="title">Rooms Page</property>
+                      <object class="GtkListBox" id="group_box">
+                        <property name="selection-mode">single</property>
+                        <property name="margin-top">24</property>
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
                       </object>
                     </property>
                   </object>
                 </child>
-
-                <!-- Bridge Page -->
+                <!-- End Rooms Page -->
+                <!-- Start Bridge Page -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">bridge</property>
                     <property name="title">Bridge</property>
                     <property name="icon-name">preferences-desktop-display-symbolic</property>
                     <property name="child">
-                      <object class="AdwStatusPage">
-                        <property name="title">Bridge Page</property>
+                      <object class="GtkListBox" id="bridge_box">
+                        <property name="selection-mode">single</property>
+                        <property name="margin-top">24</property>
+                        <property name="margin-bottom">24</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
                       </object>
                     </property>
                   </object>
                 </child>
-
+                <!-- End Bridge Page -->
               </object>
             </child>
-
+            <!-- End View Stack -->
+            <!-- Bottom Switcher Bar -->
             <child>
               <object class="AdwViewSwitcherBar" id="bottom_switcher">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="stack">main_stack</property>
                 <binding name="reveal">
                   <lookup name="title-visible">headerbar_switcher</lookup>
                 </binding>
               </object>
             </child>
-
+            <!-- Start Switcher Bar -->
           </object>
         </child>
-
-        <!-- Separator -->
+        <!-- End Lafleat Page 1 -->
+        <!-- Start Separator -->
         <child>
           <object class="AdwLeafletPage">
             <property name="navigatable">False</property>
@@ -195,13 +123,14 @@
             </property>
           </object>
         </child>
-
+        <!-- End Separator -->
         <!-- Second Lafleat Page -->
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="lafleat_page_two">
             <property name="orientation">vertical</property>
             <property name="hexpand">True</property>
             <child>
+              <!-- Start Lafleat Page 2 Header Bar -->
               <object class="AdwHeaderBar">
                 <property name="width-request">350</property>
                 <binding name="show-start-title-buttons">
@@ -213,6 +142,7 @@
                       <lookup name="folded">leaflet</lookup>
                     </binding>
                     <property name="icon-name">go-previous-symbolic</property>
+                    <signal name="clicked" handler="on_leaflet_back" swapped="no"/>
                   </object>
                 </child>
                 <property name="title-widget">
@@ -225,78 +155,17 @@
                     <binding name="visible">
                       <lookup name="folded">leaflet</lookup>
                     </binding>
+                    <signal name="activate" handler="on_switch_activate" swapped="no"/>
                   </object>
                 </child>
               </object>
+              <!-- End Lafleat Page 2 Header Bar -->
             </child>
-
-            <!-- Lights Page -->
-            <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <property name="valign">center</property>
-                <child>
-                  <object class="GtkBox" id="name">
-                    <property name="orientation">horizontal</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">Ligth One</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-top">20</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-bottom">20</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="hexpand">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="label">Modifica Nome</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-top">20</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-bottom">20</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox" id="luminosity">
-                    <property name="orientation">horizontal</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">Brightness</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-top">20</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-bottom">20</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkScale" id="light_brightness_scale">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="hexpand">True</property>
-                        <property name="adjustment">light_brightness_ad</property>
-                        <property name="draw-value">False</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-top">20</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-bottom">20</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-
           </object>
         </child>
-
+        <!-- End Lafleat Page 2 Header Bar -->
       </object>
     </child>
   </template>
 </interface>
+

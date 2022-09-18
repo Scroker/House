@@ -30,11 +30,7 @@ gnome_house_sources = [
   'main.py',
   'window.py',
   'model.py',
-  'widgets/group_view.py',
-  'widgets/light_view.py',
-  'widgets/bridge_view.py',
-  'widgets/info_view.py',
-  'widgets/rename_row.py',
+  'widgets/widgets.py',
   'utilities.py'
 ]
 
