@@ -30,7 +30,8 @@ gnome_house_sources = [
   'main.py',
   'window.py',
   'libs/model.py',
-  'libs/utilities.py',
+  'libs/hueutilities.py',
+  'libs/invenctory.py',
   'widgets/widgets.py'
 ]
 

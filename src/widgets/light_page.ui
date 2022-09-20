@@ -33,8 +33,7 @@
           <object class="AdwActionRow">
             <property name="title">Name</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">Hue color lamp 7</property>
+              <object class="GtkLabel" id="light_name">
               </object>
             </child>
           </object>
@@ -43,8 +42,7 @@
           <object class="AdwActionRow">
             <property name="title">Model</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">LCT007</property>
+              <object class="GtkLabel" id="light_model">
               </object>
             </child>
           </object>
@@ -53,18 +51,16 @@
           <object class="AdwActionRow">
             <property name="title">Type</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">Extended color light</property>
+              <object class="GtkLabel" id="light_type">
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="AdwActionRow">
-            <property name="title">Manufacted</property>
+            <property name="title">Manufacturer</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">Philips</property>
+              <object class="GtkLabel" id="manufacturer_name">
               </object>
             </child>
           </object>
@@ -73,8 +69,7 @@
           <object class="AdwActionRow">
             <property name="title">Unique ID</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">00:17:88:01:00:bd:c7:b9-0b</property>
+              <object class="GtkLabel" id="unique_id">
               </object>
             </child>
           </object>
@@ -83,8 +78,7 @@
           <object class="AdwActionRow">
             <property name="title">Software Version</property>
             <child>
-              <object class="GtkLabel">
-                <property name="label">5.105.0.21169</property>
+              <object class="GtkLabel" id="sw_version">
               </object>
             </child>
           </object>

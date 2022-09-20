@@ -3,12 +3,44 @@ import sys
 import requests
 
 from gi.repository import GObject
-from .model import PhilipsHueListener
-from .model import Bridge
-from .model import AuthenticationHandler
+from .model import AuthenticationHandler, Bridge
+from zeroconf import ServiceListener, ServiceBrowser, Zeroconf
 
-class RESTUtilities(GObject.Object):
-    __gtype_name__ = 'RESTUtilities'
+class PhilipsHueListener(ServiceListener):
+
+    def __init__(self):
+        self.info = None
+        self.name = None
+        zeroconf = Zeroconf()
+        browser = ServiceBrowser(zeroconf, "_hue._tcp.local.", self)
+        while True:
+            if self.info != None: break
+        zeroconf.close()
+
+    def get_ip_addresses(self):
+        if self.info != None:
+            return self.info.parsed_addresses()
+
+    def get_bridge(self) -> Bridge:
+        bridge = Bridge(self.name, self.info.parsed_addresses()[0])
+        return bridge
+
+    def update_service(self, zc: Zeroconf, type_: str, name: str) -> None:
+        self.name = name
+        self.info = zc.get_service_info(type_, name)
+        print(f"Service {name} updated")
+
+    def remove_service(self, zc: Zeroconf, type_: str, name: str) -> None:
+        print(f"Service {name} removed")
+
+    def add_service(self, zc: Zeroconf, type_: str, name: str) -> None:
+        self.name = name.removesuffix('._hue._tcp.local.')
+        self.info = zc.get_service_info(type_, name)
+        print(f"Service {name} added")
+
+
+class HueServicesREST(GObject.Object):
+    __gtype_name__ = 'HueServicesREST'
 
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -71,12 +103,12 @@ class RESTUtilities(GObject.Object):
         if 'error' in groups:
             raise Exception(groups['error'])
         else :
-            for index in groups:
-                lights = {}
-                for light_id in groups[index]['lights']:
-                    light = RESTUtilities.get_light(bridge, authentication_handler, light_id)
-                    lights[light_id] = light
-                groups[index]['lights'] = lights
+            #for index in groups:
+                #lights = {}
+                #for light_id in groups[index]['lights']:
+                #    light = HueServicesREST.get_light(bridge, authentication_handler, light_id)
+                #    lights[light_id] = light
+            #    groups[index]['lights'] = lights
             return groups
 
     @staticmethod
@@ -175,3 +207,5 @@ class RESTUtilities(GObject.Object):
         delete_response = response.json()
         if 'error' in delete_response:
             raise Exception(delete_response['error'])
+
+

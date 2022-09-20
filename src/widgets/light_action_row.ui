@@ -3,8 +3,6 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="LightActionRow" parent="AdwActionRow">
-    <property name="title">Light One</property>
-    <property name="subtitle">Kitchen</property>
     <child>
       <object class="GtkSwitch">
         <property name="margin-top">12</property>

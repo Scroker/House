@@ -19,12 +19,18 @@ import socket
 import platform
 
 from gi.repository import Gtk, Gio, Adw
-from .model import Constants, PhilipsHueListener
+
+from .model import Constants, Light, Bridge, AuthenticationHandler
+from .invenctory import BridgeInvenctory, LightsInvenctory, GroupsInvenctory
 from .widgets import LightActionRow, GroupActionRow, BridgeActionRow, LightPage
 
 @Gtk.Template(resource_path='/org/gnome/House/window.ui')
 class House(Adw.ApplicationWindow):
     __gtype_name__ = 'House'
+
+    #APP variables
+
+    #GTK variables
     leaflet = Gtk.Template.Child()
     bridge_toast_overlay = Gtk.Template.Child()
     lafleat_page_two = Gtk.Template.Child()
@@ -37,34 +43,42 @@ class House(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_css()
-        self.init_leaflet()
-        self.update_lights()
-        self.update_rooms()
         self.update_bridges()
-        print(socket.gethostname())
+        self.init_leaflet()
+        user_name = self.settings.get_string('hue-hub-user-name')
+        if user_name != None and user_name != '':
+            self.update_lights()
+            self.update_rooms()
 
     def init_leaflet(self):
-        light_page = LightPage(None)
-        self.lafleat_page_two.append(light_page)
+        auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+        bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
+        lights = LightsInvenctory.get_lights(bridge, auth)
+        for light in lights:
+            light_page = LightPage(light)
+            self.lafleat_page_two.append(light_page)
+            break
         self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
 
     def update_lights(self):
-        light_row_1 = LightActionRow()
-        self.lights_list_box.append(light_row_1)
-        light_row_2 = LightActionRow()
-        self.lights_list_box.append(light_row_2)
-        light_row_3 = LightActionRow()
-        self.lights_list_box.append(light_row_3)
+        auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+        bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
+        lights = LightsInvenctory.get_lights(bridge, auth)
+        for light in lights:
+            light_row_1 = LightActionRow(light)
+            self.lights_list_box.append(light_row_1)
 
     def update_rooms(self):
-        room_row = GroupActionRow()
-        self.rooms_list_box.append(room_row)
+        auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+        bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
+        groups = GroupsInvenctory.get_groups(bridge, auth)
+        for group in groups:
+            group_row_1 = GroupActionRow(group)
+            self.rooms_list_box.append(group_row_1)
 
     def update_bridges(self):
-        listener = PhilipsHueListener()
-        if listener.info != None :
-            bridge = listener.get_bridge()
-            bridge_row = BridgeActionRow(self, self.bridge_toast_overlay, bridge)
+        for bridge in BridgeInvenctory.get_bridges():
+            bridge_row = BridgeActionRow(self.settings, self.bridge_toast_overlay, bridge)
             self.bridges_list_box.append(bridge_row)
 
     def load_css(self):
@@ -85,5 +99,7 @@ class House(Adw.ApplicationWindow):
     def on_leaflet_back(self, widget):
         if self.leaflet.get_folded():
             self.leaflet.navigate(Adw.NavigationDirection.BACK)
+
+
 
 

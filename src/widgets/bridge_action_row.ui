@@ -24,6 +24,7 @@
         <style>
           <class name="destructive-action"/>
         </style>
+        <signal name="clicked" handler="on_bridge_disconnect" swapped="no"/>
       </object>
     </child>
   </template>
