@@ -29,9 +29,9 @@ gnome_house_sources = [
   '__init__.py',
   'main.py',
   'window.py',
-  'model.py',
-  'widgets/widgets.py',
-  'utilities.py'
+  'libs/model.py',
+  'libs/utilities.py',
+  'widgets/widgets.py'
 ]
 
 install_data(gnome_house_sources, install_dir: moduledir)

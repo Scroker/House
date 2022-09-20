@@ -6,13 +6,26 @@
     <property name="title">Philips Hue XXXXX</property>
     <property name="subtitle">192.168.1.86</property>
     <child>
-      <object class="GtkLabel">
-        <property name="label">Connected</property>
+      <object class="GtkButton" id="disconnected_button">
+        <property name="icon-name">list-add-symbolic</property>
         <property name="margin-top">10</property>
-        <property name="margin-end">10</property>
         <property name="margin-bottom">10</property>
-        <property name="margin-start">10</property>
+        <style>
+          <class name="suggested-action"/>
+        </style>
+        <signal name="clicked" handler="on_bridge_connect" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="connected_button">
+        <property name="icon-name">user-trash-symbolic</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <style>
+          <class name="destructive-action"/>
+        </style>
       </object>
     </child>
   </template>
 </interface>
+

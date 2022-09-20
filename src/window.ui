@@ -2,6 +2,24 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
+  <menu id="app_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
   <template class="House" parent="AdwApplicationWindow">
     <property name="default-width">1200</property>
     <property name="default-height">800</property>
@@ -36,71 +54,86 @@
                     </child>
                   </object>
                 </child>
+                <child type="end">
+                  <object class="GtkMenuButton" id="info_menu_button">
+                     <property name="menu-model">app_menu</property>
+                     <child>
+                       <object class="GtkImage">
+                         <property name="icon-name">open-menu-symbolic</property>
+                       </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
-            <!-- End Header Bar -->
-            <!-- Start View Stack -->
+            <!-- Start Main View Stack -->
             <child>
               <object class="AdwViewStack" id="main_stack">
                 <property name="height-request">400</property>
                 <property name="vexpand">True</property>
-                <!-- Start Lights Page -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">lights</property>
                     <property name="title">Lights</property>
                     <property name="icon-name">dialog-information-symbolic</property>
                     <property name="child">
-                      <object class="GtkListBox" id="light_box">
-                        <property name="selection-mode">single</property>
-                        <property name="margin-top">24</property>
-                        <property name="margin-bottom">24</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
+                      <object class="GtkListBox" id="lights_list_box">
+                        <property name="vexpand">True</property>
+                        <property name="margin-end">20</property>
+                        <property name="margin-start">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-top">20</property>
+                        <style>
+                          <class name="navigation-sidebar"/>
+                        </style>
                       </object>
                     </property>
                   </object>
                 </child>
-                <!-- End Lights Page -->
-                <!-- Start Rooms Page -->
                 <child>
                   <object class="AdwViewStackPage">
                     <property name="name">rooms</property>
                     <property name="title">Rooms</property>
-                    <property name="icon-name">user-home-symbolic</property>
+                    <property name="icon-name">go-home-symbolic</property>
                     <property name="child">
-                      <object class="GtkListBox" id="group_box">
-                        <property name="selection-mode">single</property>
-                        <property name="margin-top">24</property>
-                        <property name="margin-bottom">24</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
+                      <object class="GtkListBox" id="rooms_list_box">
+                        <property name="vexpand">True</property>
+                        <property name="margin-end">20</property>
+                        <property name="margin-start">20</property>
+                        <property name="margin-bottom">20</property>
+                        <property name="margin-top">20</property>
+                        <style>
+                          <class name="navigation-sidebar"/>
+                        </style>
                       </object>
                     </property>
                   </object>
                 </child>
-                <!-- End Rooms Page -->
-                <!-- Start Bridge Page -->
                 <child>
                   <object class="AdwViewStackPage">
-                    <property name="name">bridge</property>
-                    <property name="title">Bridge</property>
-                    <property name="icon-name">preferences-desktop-display-symbolic</property>
+                    <property name="name">bridges</property>
+                    <property name="title">bridges</property>
+                    <property name="icon-name">network-server-symbolic</property>
                     <property name="child">
-                      <object class="GtkListBox" id="bridge_box">
-                        <property name="selection-mode">single</property>
-                        <property name="margin-top">24</property>
-                        <property name="margin-bottom">24</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
+                      <object class="AdwToastOverlay" id="bridge_toast_overlay">
+                        <child>
+                          <object class="GtkListBox" id="bridges_list_box">
+                            <property name="vexpand">True</property>
+                            <property name="margin-end">20</property>
+                            <property name="margin-start">20</property>
+                            <property name="margin-bottom">20</property>
+                            <property name="margin-top">20</property>
+                            <style>
+                              <class name="navigation-sidebar"/>
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </property>
                   </object>
                 </child>
-                <!-- End Bridge Page -->
               </object>
             </child>
-            <!-- End View Stack -->
             <!-- Bottom Switcher Bar -->
             <child>
               <object class="AdwViewSwitcherBar" id="bottom_switcher">
@@ -130,7 +163,7 @@
             <property name="orientation">vertical</property>
             <property name="hexpand">True</property>
             <child>
-              <!-- Start Lafleat Page 2 Header Bar -->
+              <!-- Start Header Bar -->
               <object class="AdwHeaderBar">
                 <property name="width-request">350</property>
                 <binding name="show-start-title-buttons">
@@ -150,20 +183,12 @@
                     <property name="title">Light One</property>
                   </object>
                 </property>
-                <child type="end">
-                  <object class="GtkSwitch">
-                    <binding name="visible">
-                      <lookup name="folded">leaflet</lookup>
-                    </binding>
-                    <signal name="activate" handler="on_switch_activate" swapped="no"/>
-                  </object>
-                </child>
               </object>
-              <!-- End Lafleat Page 2 Header Bar -->
+              <!-- End Header Bar -->
             </child>
           </object>
         </child>
-        <!-- End Lafleat Page 2 Header Bar -->
+        <!-- End Lafleat Page 2 -->
       </object>
     </child>
   </template>

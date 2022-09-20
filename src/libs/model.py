@@ -41,3 +41,10 @@ class PhilipsHueListener(ServiceListener):
         self.name = name
         self.info = zc.get_service_info(type_, name)
         print(f"Service {name} added")
+
+class Constants(GObject.Object):
+
+    APPLICATION_STYLE = '/org/gnome/House/style.css'
+
+    def __init__(self, user_name):
+        GObject.GObject.__init__(self)
