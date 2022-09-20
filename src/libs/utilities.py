@@ -14,20 +14,11 @@ class RESTUtilities(GObject.Object):
         GObject.GObject.__init__(self)
 
     @staticmethod
-    def discover_bridges():
-        bridges = []
-        listener = PhilipsHueListener()
-        bridge_info = listener.get_ip_addresses()
-        bridge = Bridge(listener.name, bridge_info[0])
-        bridges.append(bridge)
-        return bridges
-
-    @staticmethod
-    def pair_with_the_bridge(bridge:Bridge, device_name:str):
+    def pair_with_the_bridge(bridge:Bridge, device_name:str) -> AuthenticationHandler:
         response = requests.post('http://' + bridge.internal_ip_address + '/api', json={"devicetype" : device_name})
         for pairing_info in response.json():
             if 'error' in pairing_info:
-                raise Exception(pairing_info['error'])
+                raise Exception(pairing_info['error']['description'])
             if 'success' in pairing_info:
                 authentication_handler = AuthenticationHandler(pairing_info['success']['username'])
                 return authentication_handler
@@ -37,7 +28,7 @@ class RESTUtilities(GObject.Object):
         response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/config')
         config = response.json()
         if 'error' in config:
-            raise Exception(config['error'])
+            raise Exception(config['error']['description'])
         else :
             return config
 

@@ -79,10 +79,10 @@
                     <property name="child">
                       <object class="GtkListBox" id="lights_list_box">
                         <property name="vexpand">True</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-bottom">20</property>
-                        <property name="margin-top">20</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="margin-top">10</property>
                         <style>
                           <class name="navigation-sidebar"/>
                         </style>
@@ -98,10 +98,10 @@
                     <property name="child">
                       <object class="GtkListBox" id="rooms_list_box">
                         <property name="vexpand">True</property>
-                        <property name="margin-end">20</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-bottom">20</property>
-                        <property name="margin-top">20</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="margin-top">10</property>
                         <style>
                           <class name="navigation-sidebar"/>
                         </style>
@@ -119,10 +119,10 @@
                         <child>
                           <object class="GtkListBox" id="bridges_list_box">
                             <property name="vexpand">True</property>
-                            <property name="margin-end">20</property>
-                            <property name="margin-start">20</property>
-                            <property name="margin-bottom">20</property>
-                            <property name="margin-top">20</property>
+                            <property name="margin-end">10</property>
+                            <property name="margin-start">10</property>
+                            <property name="margin-bottom">10</property>
+                            <property name="margin-top">10</property>
                             <style>
                               <class name="navigation-sidebar"/>
                             </style>
@@ -183,6 +183,13 @@
                     <property name="title">Light One</property>
                   </object>
                 </property>
+                <child type="end">
+                  <object class="GtkSwitch">
+                    <binding name="visible">
+                      <lookup name="folded">leaflet</lookup>
+                    </binding>
+                  </object>
+                </child>
               </object>
               <!-- End Header Bar -->
             </child>

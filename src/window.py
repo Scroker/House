@@ -41,9 +41,10 @@ class House(Adw.ApplicationWindow):
         self.update_lights()
         self.update_rooms()
         self.update_bridges()
+        print(socket.gethostname())
 
     def init_leaflet(self):
-        light_page = LightPage()
+        light_page = LightPage(None)
         self.lafleat_page_two.append(light_page)
         self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
 
@@ -62,7 +63,8 @@ class House(Adw.ApplicationWindow):
     def update_bridges(self):
         listener = PhilipsHueListener()
         if listener.info != None :
-            bridge_row = BridgeActionRow(self.bridge_toast_overlay, listener)
+            bridge = listener.get_bridge()
+            bridge_row = BridgeActionRow(self, self.bridge_toast_overlay, bridge)
             self.bridges_list_box.append(bridge_row)
 
     def load_css(self):

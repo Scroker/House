@@ -7,66 +7,86 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <template class="LightPage" parent="GtkBox">
-    <property name="orientation">vertical</property>
-    <property name="valign">center</property>
+  <template class="LightPage" parent="AdwPreferencesPage">
     <child>
-      <object class="GtkBox" id="name">
-        <property name="orientation">horizontal</property>
+      <object class="AdwPreferencesGroup">
+        <property name="title">Settings</property>
+        <property name="description">Configuration actions</property>
         <child>
-          <object class="GtkLabel">
-            <property name="label">Ligth One</property>
-            <property name="margin-start">20</property>
-            <property name="margin-top">20</property>
-            <property name="margin-end">20</property>
-            <property name="margin-bottom">20</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="hexpand">True</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton">
-            <property name="label">Modifica Nome</property>
-            <property name="margin-start">20</property>
-            <property name="margin-top">20</property>
-            <property name="margin-end">20</property>
-            <property name="margin-bottom">20</property>
-            <signal name="clicked" handler="on_modify_name_click" swapped="no"/>
+          <object class="AdwActionRow">
+            <property name="title">Brightness</property>
+            <child>
+              <object class="GtkScale" id="light_brightness_scale">
+                <property name="hexpand">True</property>
+                <property name="adjustment">light_brightness_ad</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="luminosity">
-        <property name="orientation">horizontal</property>
+      <object class="AdwPreferencesGroup">
+        <property name="title">Informations</property>
+        <property name="description">About this device</property>
         <child>
-          <object class="GtkLabel">
-            <property name="label">Brightness</property>
-            <property name="margin-start">20</property>
-            <property name="margin-top">20</property>
-            <property name="margin-end">20</property>
-            <property name="margin-bottom">20</property>
+          <object class="AdwActionRow">
+            <property name="title">Name</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Hue color lamp 7</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
-            <property name="hexpand">True</property>
+          <object class="AdwActionRow">
+            <property name="title">Model</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">LCT007</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkScale" id="light_brightness_scale">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="width-request">250</property>
-            <property name="adjustment">light_brightness_ad</property>
-            <property name="draw-value">False</property>
-            <property name="margin-start">20</property>
-            <property name="margin-top">20</property>
-            <property name="margin-end">20</property>
-            <property name="margin-bottom">20</property>
+          <object class="AdwActionRow">
+            <property name="title">Type</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Extended color light</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Manufacted</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Philips</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Unique ID</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">00:17:88:01:00:bd:c7:b9-0b</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Software Version</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">5.105.0.21169</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
