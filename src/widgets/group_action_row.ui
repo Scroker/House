@@ -3,8 +3,8 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="GroupActionRow" parent="AdwActionRow">
-    <property name="title">Kitchen</property>
-    <property name="subtitle">No lights on</property>
+    <property name="activatable">True</property>
+    <signal name="activated" handler="on_activate" swapped="no"/>
     <child>
       <object class="GtkSwitch">
         <property name="margin-top">12</property>

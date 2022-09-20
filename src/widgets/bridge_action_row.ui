@@ -3,8 +3,8 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="BridgeActionRow" parent="AdwActionRow">
-    <property name="title">Philips Hue XXXXX</property>
-    <property name="subtitle">192.168.1.86</property>
+    <property name="activatable">True</property>
+    <signal name="activated" handler="on_activate" swapped="no"/>
     <child>
       <object class="GtkButton" id="disconnected_button">
         <property name="icon-name">list-add-symbolic</property>

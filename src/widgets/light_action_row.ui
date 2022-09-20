@@ -3,6 +3,8 @@
   <requires lib="gtk" version="4.0"/>
   <requires lib="Adw" version="1.0"/>
   <template class="LightActionRow" parent="AdwActionRow">
+    <property name="activatable">True</property>
+    <signal name="activated" handler="on_activate" swapped="no"/>
     <child>
       <object class="GtkSwitch">
         <property name="margin-top">12</property>
@@ -11,3 +13,4 @@
     </child>
   </template>
 </interface>
+

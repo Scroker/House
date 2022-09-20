@@ -13,6 +13,10 @@ class LightActionRow(Adw.ActionRow):
         self.set_title(light.name)
         self.set_subtitle(light.type)
 
+    @Gtk.Template.Callback()
+    def on_activate(self, widget):
+        print(self.get_title())
+
 @Gtk.Template(resource_path='/org/gnome/House/widgets/group_action_row.ui')
 class GroupActionRow(Adw.ActionRow):
     __gtype_name__ = 'GroupActionRow'
@@ -21,6 +25,10 @@ class GroupActionRow(Adw.ActionRow):
         super().__init__()
         self.set_title(group.name)
         self.set_subtitle(group.type)
+
+    @Gtk.Template.Callback()
+    def on_activate(self, widget):
+        print(self.get_title())
 
 @Gtk.Template(resource_path='/org/gnome/House/widgets/bridge_action_row.ui')
 class BridgeActionRow(Adw.ActionRow):
@@ -40,6 +48,10 @@ class BridgeActionRow(Adw.ActionRow):
             self.disconnected_button.set_visible(False)
         else:
             self.connected_button.set_visible(False)
+
+    @Gtk.Template.Callback()
+    def on_activate(self, widget):
+        print(self.bridge.name)
 
     @Gtk.Template.Callback()
     def on_bridge_connect(self, widget):
