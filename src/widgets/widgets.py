@@ -41,11 +41,14 @@ class BridgeActionRow(Adw.ActionRow):
     connected_button = Gtk.Template.Child()
     disconnected_button = Gtk.Template.Child()
 
-    def __init__(self, settings:Gio.Settings, toast_overlay:Adw.ToastOverlay, bridge:Bridge):
+    def __init__(self, settings:Gio.Settings, toast_overlay:Adw.ToastOverlay, bridge:Bridge, signalHand):
         super().__init__()
-        self.toast_overlay = toast_overlay
+
         self.bridge = bridge
         self.settings = settings
+        self.signalHand = signalHand
+        self.toast_overlay = toast_overlay
+
         self.set_title(bridge.name)
         self.set_subtitle(bridge.internal_ip_address)
         if self.settings.get_string('hue-hub-id') == bridge.name and self.settings.get_string('hue-hub-ip-address') == bridge.internal_ip_address:
@@ -55,7 +58,7 @@ class BridgeActionRow(Adw.ActionRow):
 
     @Gtk.Template.Callback()
     def on_activate(self, widget):
-        print(self.bridge.name)
+        self.signalHand.emit("light_selected_signal", self.bridge)
 
     @Gtk.Template.Callback()
     def on_bridge_connect(self, widget):
@@ -115,3 +118,13 @@ class RoomPage(Adw.PreferencesPage):
         self.room_name.set_label(room.name)
         self.room_type.set_label(room.type)
 
+@Gtk.Template(resource_path='/org/gnome/House/widgets/bridge_page.ui')
+class BridgePage(Adw.PreferencesPage):
+    __gtype_name__ = 'BridgePage'
+    bridge_name = Gtk.Template.Child()
+    bridge_ip = Gtk.Template.Child()
+
+    def __init__(self, bridge:Bridge):
+        super().__init__()
+        self.bridge_name.set_label(bridge.name)
+        self.bridge_ip.set_label(bridge.internal_ip_address)

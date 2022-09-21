@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <template class="BridgePage" parent="AdwPreferencesPage">
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="title">Informations</property>
+        <property name="description">About this device</property>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Name</property>
+            <child>
+              <object class="GtkLabel" id="bridge_name">
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Ip Address</property>
+            <child>
+              <object class="GtkLabel" id="bridge_ip">
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

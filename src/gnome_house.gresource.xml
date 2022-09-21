@@ -5,6 +5,7 @@
     <file>widgets/bridge_action_row.ui</file>
     <file>widgets/light_action_row.ui</file>
     <file>widgets/group_action_row.ui</file>
+    <file>widgets/bridge_page.ui</file>
     <file>widgets/light_page.ui</file>
     <file>widgets/room_page.ui</file>
     <file>window.ui</file>
