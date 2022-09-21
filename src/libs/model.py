@@ -1,5 +1,6 @@
 from gi.repository import GObject
 from zeroconf import ServiceListener, ServiceBrowser, Zeroconf
+from .hueutilities import HueServicesREST
 
 class AuthenticationHandler(GObject.Object):
     __gtype_name__ = 'AuthenticationHandler'
@@ -15,6 +16,9 @@ class Bridge(GObject.Object):
         GObject.GObject.__init__(self)
         self.name = bridge_id
         self.internal_ip_address = internal_ip_address
+
+    def get_config(self, authentication_handler:AuthenticationHandler):
+         print(HueServicesREST.get_config(self.internal_ip_address, authentication_handler.user_name))
 
 class Group(GObject.Object):
     __gtype_name__ = 'Group'
@@ -58,3 +62,4 @@ class Constants(GObject.Object):
 
     def __init__(self, user_name):
         GObject.GObject.__init__(self)
+

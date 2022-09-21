@@ -51,7 +51,7 @@ class BridgeActionRow(Adw.ActionRow):
 
         self.set_title(bridge.name)
         self.set_subtitle(bridge.internal_ip_address)
-        if self.settings.get_string('hue-hub-id') == bridge.name and self.settings.get_string('hue-hub-ip-address') == bridge.internal_ip_address:
+        if self.settings.get_string('hue-hub-id') == bridge.name and self.settings.get_string('hue-hub-ip-address') == bridge.internal_ip_address :
             self.disconnected_button.set_visible(False)
         else:
             self.connected_button.set_visible(False)
@@ -73,6 +73,7 @@ class BridgeActionRow(Adw.ActionRow):
             toast.set_title('Connected with ' + self.bridge.name)
             self.toast_overlay.add_toast(toast)
         except Exception as err:
+            print(err)
             toast = Adw.Toast()
             toast.set_title('Error: ' + err.args[0])
             self.toast_overlay.add_toast(toast)

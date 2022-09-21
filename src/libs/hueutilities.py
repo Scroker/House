@@ -3,41 +3,29 @@ import sys
 import requests
 
 from gi.repository import GObject
-from .model import AuthenticationHandler, Bridge
 from zeroconf import ServiceListener, ServiceBrowser, Zeroconf
 
 class PhilipsHueListener(ServiceListener):
 
+    discovered_bridges = {}
+
     def __init__(self):
-        self.info = None
-        self.name = None
         zeroconf = Zeroconf()
         browser = ServiceBrowser(zeroconf, "_hue._tcp.local.", self)
         while True:
-            if self.info != None: break
+            if len(self.discovered_bridges) > 0: break
         zeroconf.close()
 
-    def get_ip_addresses(self):
-        if self.info != None:
-            return self.info.parsed_addresses()
-
-    def get_bridge(self) -> Bridge:
-        bridge = Bridge(self.name, self.info.parsed_addresses()[0])
-        return bridge
-
     def update_service(self, zc: Zeroconf, type_: str, name: str) -> None:
-        self.name = name
-        self.info = zc.get_service_info(type_, name)
+        self.discovered_bridges.update({ name : zc.get_service_info(type_, name)})
         print(f"Service {name} updated")
 
     def remove_service(self, zc: Zeroconf, type_: str, name: str) -> None:
         print(f"Service {name} removed")
 
     def add_service(self, zc: Zeroconf, type_: str, name: str) -> None:
-        self.name = name.removesuffix('._hue._tcp.local.')
-        self.info = zc.get_service_info(type_, name)
+        self.discovered_bridges[name] = zc.get_service_info(type_, name)
         print(f"Service {name} added")
-
 
 class HueServicesREST(GObject.Object):
     __gtype_name__ = 'HueServicesREST'
@@ -46,18 +34,17 @@ class HueServicesREST(GObject.Object):
         GObject.GObject.__init__(self)
 
     @staticmethod
-    def pair_with_the_bridge(bridge:Bridge, device_name:str) -> AuthenticationHandler:
-        response = requests.post('http://' + bridge.internal_ip_address + '/api', json={"devicetype" : device_name})
+    def pair_with_the_bridge(ip_address:str, device_name:str):
+        response = requests.post('http://' + ip_address + '/api', json={"devicetype" : device_name})
         for pairing_info in response.json():
             if 'error' in pairing_info:
                 raise Exception(pairing_info['error']['description'])
             if 'success' in pairing_info:
-                authentication_handler = AuthenticationHandler(pairing_info['success']['username'])
-                return authentication_handler
+                return pairing_info['success']['username']
 
     @staticmethod
-    def get_config(bridge:Bridge, authentication_handler:AuthenticationHandler):
-        response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/config')
+    def get_config(ip_address, user_name:str):
+        response = requests.get('http://' + ip_address + '/api/' + user_name + '/config')
         config = response.json()
         if 'error' in config:
             raise Exception(config['error']['description'])
@@ -65,8 +52,8 @@ class HueServicesREST(GObject.Object):
             return config
 
     @staticmethod
-    def get_light(bridge:Bridge, authentication_handler:AuthenticationHandler, light_id:int):
-        response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + light_id)
+    def get_light(ip_address:str, user_name:str, light_id:int):
+        response = requests.get('http://' + ip_address + '/api/' + user_name + '/lights/' + light_id)
         light = response.json()
         if 'error' in light:
             raise Exception(light['error'])
@@ -74,8 +61,8 @@ class HueServicesREST(GObject.Object):
             return light
 
     @staticmethod
-    def get_lights(bridge:Bridge, authentication_handler:AuthenticationHandler):
-        response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights')
+    def get_lights(ip_address:str, user_name:str):
+        response = requests.get('http://' + ip_address + '/api/' + user_name + '/lights')
         lights = response.json()
         if 'error' in lights:
             raise Exception(lights['error'])
@@ -83,8 +70,8 @@ class HueServicesREST(GObject.Object):
             return lights
 
     @staticmethod
-    def get_group(bridge:Bridge, authentication_handler:AuthenticationHandler, gropu_id:int):
-        response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + gropu_id)
+    def get_group(ip_address:str, user_name:str, gropu_id:int):
+        response = requests.get('http://' + ip_address + '/api/' + user_name + '/groups/' + gropu_id)
         group = response.json()
         if 'error' in group:
             raise Exception(group['error'])
@@ -97,9 +84,11 @@ class HueServicesREST(GObject.Object):
             return group
 
     @staticmethod
-    def get_groups(bridge:Bridge, authentication_handler:AuthenticationHandler):
-        response = requests.get('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups')
+    def get_groups(ip_address:str, user_name:str):
+        response = requests.get('http://' + ip_address + '/api/' + user_name + '/groups')
+        print('http://' + ip_address + '/api/' + user_name + '/groups')
         groups = response.json()
+        print(groups)
         if 'error' in groups:
             raise Exception(groups['error'])
         else :
@@ -112,7 +101,7 @@ class HueServicesREST(GObject.Object):
             return groups
 
     @staticmethod
-    def post_new_group(bridge:Bridge, authentication_handler:AuthenticationHandler, name:str, lights:list=None, sensors:list=None, group_type:str="Room", group_class:str=None):
+    def post_new_group(ip_address:str, user_name:str, name:str, lights:list=None, sensors:list=None, group_type:str="Room", group_class:str=None):
         request = {}
         request["name"] = name
         if lights != None :
@@ -123,7 +112,7 @@ class HueServicesREST(GObject.Object):
             request["type"] = group_type
         if group_class != None :
             request["class"] = group_class
-        response = requests.post('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups', json=request)
+        response = requests.post('http://' + ip_address + '/api/' + user_name + '/groups', json=request)
         for set_group_response in response.json():
             if 'error' in set_group_response:
                 raise Exception(set_group_response['error'])
@@ -131,7 +120,7 @@ class HueServicesREST(GObject.Object):
                 return set_group_response['success']['id']
 
     @staticmethod
-    def put_light_status(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, active:str=None , brightness:int=None, alert:str=None, mode:str=None, reachable:bool=None):
+    def put_light_status(ip_address:str, user_name:str, index:int, active:str=None , brightness:int=None, alert:str=None, mode:str=None, reachable:bool=None):
         request = {}
         if active != None :
             request["on"] = active
@@ -143,7 +132,7 @@ class HueServicesREST(GObject.Object):
             request["mode"] = mode
         if reachable != None :
             request["reachable"] = reachable
-        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + index + '/state', json=request)
+        response = requests.put('http://' + ip_address + '/api/' + user_name + '/lights/' + index + '/state', json=request)
         for set_light_response in response.json():
             if 'error' in set_light_response:
                 raise Exception(set_light_response['error'])
@@ -151,7 +140,7 @@ class HueServicesREST(GObject.Object):
                 return set_light_response['success']
 
     @staticmethod
-    def put_group(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str=None, lights:list=None, group_class:str=None):
+    def put_group(ip_address:str, user_name:str, index:int, name:str=None, lights:list=None, group_class:str=None):
         request = {}
         if name != None :
             request["name"] = name
@@ -159,7 +148,7 @@ class HueServicesREST(GObject.Object):
             request["lights"] = lights
         if group_class != None :
             request["class"] = group_class
-        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index, json=request)
+        response = requests.put('http://' + ip_address + '/api/' + user_name + '/groups/' + index, json=request)
         for set_group_response in response.json():
             if 'error' in set_group_response:
                 raise Exception(set_group_response['error'])
@@ -167,10 +156,10 @@ class HueServicesREST(GObject.Object):
                 print(set_group_response['success'])
 
     @staticmethod
-    def put_light_name(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, name:str):
+    def put_light_name(ip_address:str, user_name:str, index:int, name:str):
         request = {}
         request["name"] = name
-        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/lights/' + index, json=request)
+        response = requests.put('http://' + ip_address + '/api/' + user_name + '/lights/' + index, json=request)
         for put_light_response in response.json():
             if 'error' in put_light_response:
                 raise Exception(put_light_response['error'])
@@ -178,7 +167,7 @@ class HueServicesREST(GObject.Object):
                 print(put_light_response['success'])
 
     @staticmethod
-    def put_group_action(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int, active:str=None, brightness:int=None, alert:str=None):
+    def put_group_action(ip_address:str, user_name:str, index:int, active:str=None, brightness:int=None, alert:str=None):
         request = {}
         if active != None :
             request["on"] = active
@@ -187,7 +176,7 @@ class HueServicesREST(GObject.Object):
         if alert != None :
             request["alert"] = alert
         print('Hello')
-        response = requests.put('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index + '/action', json=request)
+        response = requests.put('http://' + ip_address + '/api/' + user_name + '/groups/' + index + '/action', json=request)
         for set_group_response in response.json():
             if 'error' in set_group_response:
                 raise Exception(set_group_response['error'])
@@ -195,17 +184,15 @@ class HueServicesREST(GObject.Object):
                 return set_group_response['success']
 
     @staticmethod
-    def delete_group(bridge:Bridge, authentication_handler:AuthenticationHandler, index:int):
-        response = requests.delete('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + index)
+    def delete_group(ip_address:str, user_name:str, index:int):
+        response = requests.delete('http://' + ip_address + '/api/' + user_name + '/groups/' + index)
         delete_response = response.json()
         if 'error' in delete_response:
             raise Exception(delete_response['error'])
 
     @staticmethod
-    def delete_light(bridge:Bridge, authentication_handler:AuthenticationHandler, light_id:int):
-        response = requests.delete('http://' + bridge.internal_ip_address + '/api/' + authentication_handler.user_name + '/groups/' + light_id)
+    def delete_light(ip_address:str, user_name:str, light_id:int):
+        response = requests.delete('http://' + ip_address + '/api/' + user_name + '/groups/' + light_id)
         delete_response = response.json()
         if 'error' in delete_response:
             raise Exception(delete_response['error'])
-
-
