@@ -50,9 +50,14 @@ class BridgeActionRow(Adw.ActionRow):
         self.toast_overlay = toast_overlay
 
         self.set_title(bridge.name)
-        self.set_subtitle(bridge.internal_ip_address)
-        if self.settings.get_string('hue-hub-id') == bridge.name and self.settings.get_string('hue-hub-ip-address') == bridge.internal_ip_address :
+        self.set_subtitle(bridge.ip_address)
+        if self.settings.get_string('hue-hub-id') == bridge.name \
+        and self.settings.get_string('hue-hub-ip-address') == bridge.ip_address \
+        and self.settings.get_string('hue-hub-user-name') != '':
             self.disconnected_button.set_visible(False)
+            auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
+            bridge.get_config(auth)
+            print(bridge.get_config(auth))
         else:
             self.connected_button.set_visible(False)
 
@@ -65,7 +70,7 @@ class BridgeActionRow(Adw.ActionRow):
         try:
             auth_handler = AuthenticationProvider.autenticate(self.bridge)
             self.settings.set_string('hue-hub-id', self.bridge.name)
-            self.settings.set_string('hue-hub-ip-address', self.bridge.internal_ip_address)
+            self.settings.set_string('hue-hub-ip-address', self.bridge.ip_address)
             self.settings.set_string('hue-hub-user-name', auth_handler.user_name)
             self.connected_button.set_visible(True)
             self.disconnected_button.set_visible(False)
@@ -124,8 +129,21 @@ class BridgePage(Adw.PreferencesPage):
     __gtype_name__ = 'BridgePage'
     bridge_name = Gtk.Template.Child()
     bridge_ip = Gtk.Template.Child()
+    macaddress = Gtk.Template.Child()
+    swversion = Gtk.Template.Child()
+    timezone = Gtk.Template.Child()
+    modelid = Gtk.Template.Child()
 
     def __init__(self, bridge:Bridge):
         super().__init__()
         self.bridge_name.set_label(bridge.name)
-        self.bridge_ip.set_label(bridge.internal_ip_address)
+        self.bridge_ip.set_label(bridge.ip_address)
+        if bridge.macaddress != None:
+            self.macaddress.set_label(bridge.macaddress)
+        if bridge.swversion != None:
+            self.swversion.set_label(bridge.swversion)
+        if bridge.timezone != None:
+            self.timezone.set_label(bridge.timezone)
+        if bridge.modelid != None:
+            self.modelid.set_label(bridge.modelid)
+

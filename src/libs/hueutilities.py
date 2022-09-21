@@ -86,9 +86,7 @@ class HueServicesREST(GObject.Object):
     @staticmethod
     def get_groups(ip_address:str, user_name:str):
         response = requests.get('http://' + ip_address + '/api/' + user_name + '/groups')
-        print('http://' + ip_address + '/api/' + user_name + '/groups')
         groups = response.json()
-        print(groups)
         if 'error' in groups:
             raise Exception(groups['error'])
         else :
@@ -196,3 +194,5 @@ class HueServicesREST(GObject.Object):
         delete_response = response.json()
         if 'error' in delete_response:
             raise Exception(delete_response['error'])
+
+

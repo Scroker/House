@@ -25,7 +25,45 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">MAC Address</property>
+            <child>
+              <object class="GtkLabel" id="macaddress">
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Software version</property>
+            <child>
+              <object class="GtkLabel" id="swversion">
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Timezone</property>
+            <child>
+              <object class="GtkLabel" id="timezone">
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwActionRow">
+            <property name="title">Model ID</property>
+            <child>
+              <object class="GtkLabel" id="modelid">
+              </object>
+            </child>
+          </object>
+        </child>
+
       </object>
     </child>
   </template>
 </interface>
+

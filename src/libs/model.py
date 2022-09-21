@@ -12,13 +12,48 @@ class AuthenticationHandler(GObject.Object):
 class Bridge(GObject.Object):
     __gtype_name__ = 'Bridge'
 
-    def __init__(self, bridge_id, internal_ip_address):
+    def __init__(self, name, ip_address):
         GObject.GObject.__init__(self)
-        self.name = bridge_id
-        self.internal_ip_address = internal_ip_address
+        self.name = name
+        self.ip_address = ip_address
+        self.macaddress = None
+        self.swversion = None
+        self.bridgeid = None
+        self.macaddress = None
+        self.dhcp = None
+        self.proxyaddress = None
+        self.proxyport = None
+        self.modelid = None
+        self.UTC = None
+        self.timezone = None
+        self.modelid = None
+        self.datastoreversion = None
+        self.swversion = None
+        self.linkbutton = None
+        self.portalservices = None
+        self.portalconnection = None
+        self.starterkitid = None
+
 
     def get_config(self, authentication_handler:AuthenticationHandler):
-         print(HueServicesREST.get_config(self.internal_ip_address, authentication_handler.user_name))
+        json = HueServicesREST.get_config(self.ip_address, authentication_handler.user_name)
+        self.macaddress = json['mac']
+        self.swversion = json['zigbeechannel']
+        self.bridgeid = json['bridgeid']
+        self.macaddress = json['mac']
+        self.dhcp = json['dhcp']
+        self.proxyaddress = json['proxyaddress']
+        self.proxyport = json['proxyport']
+        self.modelid = json['UTC']
+        self.UTC = json['localtime']
+        self.timezone = json['timezone']
+        self.modelid = json['modelid']
+        self.datastoreversion = json['datastoreversion']
+        self.swversion = json['swversion']
+        self.linkbutton = json['linkbutton']
+        self.portalservices = json['portalservices']
+        self.portalconnection = json['portalconnection']
+        self.starterkitid = json['starterkitid']
 
 class Group(GObject.Object):
     __gtype_name__ = 'Group'
@@ -62,4 +97,5 @@ class Constants(GObject.Object):
 
     def __init__(self, user_name):
         GObject.GObject.__init__(self)
+
 

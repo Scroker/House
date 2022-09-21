@@ -15,7 +15,7 @@ class AuthenticationProvider(GObject.Object):
     @staticmethod
     def autenticate(bridge:Bridge) -> AuthenticationHandler:
         device_name = socket.gethostname() + "#" + platform.system()
-        auth_handler = AuthenticationHandler(HueServicesREST.pair_with_the_bridge(bridge.internal_ip_address, device_name))
+        auth_handler = AuthenticationHandler(HueServicesREST.pair_with_the_bridge(bridge.ip_address, device_name))
         return auth_handler
 
 class LightsInvenctory(GObject.Object):
@@ -27,7 +27,10 @@ class LightsInvenctory(GObject.Object):
     @staticmethod
     def get_lights(bridge:Bridge, authentication_handler:AuthenticationHandler):
         lights = []
-        lights_json = HueServicesREST.get_lights(bridge.internal_ip_address, authentication_handler.user_name)
+        try:
+            lights_json = HueServicesREST.get_lights(bridge.ip_address, authentication_handler.user_name)
+        except:
+            print("Connection Error during get lights")
         for i in lights_json:
             json = lights_json.get(i)
             light = Light(i, json['name'], json['type'], json['modelid'], json['manufacturername'], json['uniqueid'], json['swversion'])
@@ -43,10 +46,11 @@ class GroupsInvenctory(GObject.Object):
     @staticmethod
     def get_groups(bridge:Bridge, authentication_handler:AuthenticationHandler):
         groups = []
+        groups_json = None
         try:
-            groups_json = HueServicesREST.get_groups(bridge.internal_ip_address, authentication_handler.user_name)
+            groups_json = HueServicesREST.get_groups(bridge.ip_address, authentication_handler.user_name)
         except:
-            print(groups_json)
+            print("Connection Error during get groups")
         for i in groups_json:
             json = groups_json.get(i)
             group = Group(i, json['name'], json['type'])
@@ -69,3 +73,4 @@ class BridgeInvenctory(GObject.Object):
             bridge = Bridge(name.removesuffix('._hue._tcp.local.'), discovered_bridges[name].parsed_addresses()[0])
             bridges.append(bridge)
         return bridges
+

@@ -49,7 +49,6 @@ class House(Adw.ApplicationWindow):
         user_name = self.settings.get_string('hue-hub-user-name')
         self.signalHand.connect("light_selected_signal", self.test_callback)
         if user_name != None and user_name != '':
-            print('user_name: ' + self.settings.get_string('hue-hub-user-name'))
             self.update_lights()
             self.update_rooms()
 
@@ -68,6 +67,8 @@ class House(Adw.ApplicationWindow):
     def init_leaflet(self):
         auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
+        if auth.user_name != None and auth.user_name != '':
+            bridge.get_config(auth)
         bridge_page = BridgePage(bridge)
         self.lafleat_page_two.append(bridge_page)
 
@@ -88,7 +89,6 @@ class House(Adw.ApplicationWindow):
             self.rooms_list_box.append(group_row_1)
 
     def update_bridges(self):
-        bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         for bridge in BridgeInvenctory.get_bridges():
             bridge_row = BridgeActionRow(self.settings, self.bridge_toast_overlay, bridge, self.signalHand)
             self.bridges_list_box.append(bridge_row)
