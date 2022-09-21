@@ -8,27 +8,31 @@ from .invenctory import AuthenticationProvider, LightsInvenctory
 class LightActionRow(Adw.ActionRow):
     __gtype_name__ = 'LightActionRow'
 
-    def __init__(self, light:Light):
+    def __init__(self, light:Light, signalHand):
         super().__init__()
+        self.light = light
+        self.signalHand = signalHand
         self.set_title(light.name)
         self.set_subtitle(light.type)
 
     @Gtk.Template.Callback()
     def on_activate(self, widget):
-        print(self.get_title())
+        self.signalHand.emit("light_selected_signal", self.light)
 
 @Gtk.Template(resource_path='/org/gnome/House/widgets/group_action_row.ui')
 class GroupActionRow(Adw.ActionRow):
     __gtype_name__ = 'GroupActionRow'
 
-    def __init__(self, group:Group):
+    def __init__(self, group:Group, signalHand):
         super().__init__()
+        self.group = group
+        self.signalHand = signalHand
         self.set_title(group.name)
         self.set_subtitle(group.type)
 
     @Gtk.Template.Callback()
     def on_activate(self, widget):
-        print(self.get_title())
+        self.signalHand.emit("light_selected_signal", self.group)
 
 @Gtk.Template(resource_path='/org/gnome/House/widgets/bridge_action_row.ui')
 class BridgeActionRow(Adw.ActionRow):
@@ -100,4 +104,14 @@ class LightPage(Adw.PreferencesPage):
         self.unique_id.set_label(light.unique_id)
         self.sw_version.set_label(light.sw_version)
 
+@Gtk.Template(resource_path='/org/gnome/House/widgets/room_page.ui')
+class RoomPage(Adw.PreferencesPage):
+    __gtype_name__ = 'RoomPage'
+    room_name = Gtk.Template.Child()
+    room_type = Gtk.Template.Child()
+
+    def __init__(self, room:Group):
+        super().__init__()
+        self.room_name.set_label(room.name)
+        self.room_type.set_label(room.type)
 

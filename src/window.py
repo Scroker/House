@@ -18,17 +18,18 @@ import gi
 import socket
 import platform
 
-from gi.repository import Gtk, Gio, Adw
+from gi.repository import Gtk, Gio, Adw, GObject
 
-from .model import Constants, Light, Bridge, AuthenticationHandler
+from .model import Constants, Light, Group, Bridge, AuthenticationHandler, MyClass
 from .invenctory import BridgeInvenctory, LightsInvenctory, GroupsInvenctory
-from .widgets import LightActionRow, GroupActionRow, BridgeActionRow, LightPage
+from .widgets import LightActionRow, GroupActionRow, BridgeActionRow, LightPage, RoomPage
 
 @Gtk.Template(resource_path='/org/gnome/House/window.ui')
 class House(Adw.ApplicationWindow):
     __gtype_name__ = 'House'
 
     #APP variables
+    signalHand = MyClass()
 
     #GTK variables
     leaflet = Gtk.Template.Child()
@@ -46,9 +47,23 @@ class House(Adw.ApplicationWindow):
         self.update_bridges()
         self.init_leaflet()
         user_name = self.settings.get_string('hue-hub-user-name')
+        self.signalHand.connect("light_selected_signal", self.test_callback)
         if user_name != None and user_name != '':
             self.update_lights()
             self.update_rooms()
+
+    def test_callback(self, inst, obj):
+        print("borcodio")
+        if isinstance(obj, Light):
+            light_page = LightPage(obj)
+            self.lafleat_page_two.remove(self.lafleat_page_two.get_last_child())
+            self.lafleat_page_two.append(light_page)
+            self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
+        elif isinstance(obj, Group):
+            group_page = RoomPage(obj)
+            self.lafleat_page_two.remove(self.lafleat_page_two.get_last_child())
+            self.lafleat_page_two.append(group_page)
+            self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
 
     def init_leaflet(self):
         auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
@@ -58,14 +73,13 @@ class House(Adw.ApplicationWindow):
             light_page = LightPage(light)
             self.lafleat_page_two.append(light_page)
             break
-        self.leaflet.navigate(Adw.NavigationDirection.FORWARD)
 
     def update_lights(self):
         auth = AuthenticationHandler(self.settings.get_string('hue-hub-user-name'))
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         lights = LightsInvenctory.get_lights(bridge, auth)
         for light in lights:
-            light_row_1 = LightActionRow(light)
+            light_row_1 = LightActionRow(light, self.signalHand)
             self.lights_list_box.append(light_row_1)
 
     def update_rooms(self):
@@ -73,7 +87,7 @@ class House(Adw.ApplicationWindow):
         bridge = Bridge(self.settings.get_string('hue-hub-id'), self.settings.get_string('hue-hub-ip-address'))
         groups = GroupsInvenctory.get_groups(bridge, auth)
         for group in groups:
-            group_row_1 = GroupActionRow(group)
+            group_row_1 = GroupActionRow(group, self.signalHand)
             self.rooms_list_box.append(group_row_1)
 
     def update_bridges(self):
@@ -99,6 +113,7 @@ class House(Adw.ApplicationWindow):
     def on_leaflet_back(self, widget):
         if self.leaflet.get_folded():
             self.leaflet.navigate(Adw.NavigationDirection.BACK)
+
 
 
 

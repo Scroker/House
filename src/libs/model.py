@@ -38,6 +38,19 @@ class Light(GObject.Object):
         self.unique_id = unique_id
         self.sw_version = sw_version
 
+class MyClass(GObject.Object):
+    __gtype_name__ = 'MyClass'
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+    @GObject.Signal(flags=GObject.SignalFlags.RUN_LAST, return_type=bool,
+                    arg_types=(object,),
+                    accumulator=GObject.signal_accumulator_true_handled)
+
+    def light_selected_signal(self, *args):
+        print("Selected light: " + args[0].name)
+
 class Constants(GObject.Object):
     __gtype_name__ = 'Constants'
 
