@@ -17,5 +17,5 @@ Todo Features:
 - Add add a new device
 
 # Screenshots
-![LightController screenshot](https://github.com/Scroker/Photos/blob/main/LightControllerScreen/Schermata%20del%202022-09-17%2002-50-30.png)
-![LightController screenshot](https://github.com/Scroker/Photos/blob/main/LightControllerScreen/Schermata%20del%202022-09-17%2002-51-35.png)
+![LightController screenshot](https://github.com/Scroker/Photos/blob/main/Schermata%20del%202022-09-21%2011-46-47.png)
+![LightController screenshot](https://github.com/Scroker/Photos/blob/main/Schermata%20del%202022-09-21%2011-47-40.png)
